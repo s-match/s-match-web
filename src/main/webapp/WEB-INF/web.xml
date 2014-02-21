@@ -5,20 +5,20 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>it.unitn.disi.smatch.web.demo.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/webdemo/greet</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>WebDemo.html</welcome-file>
-  </welcome-file-list>
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>greetServlet</servlet-name>
+        <servlet-class>it.unitn.disi.smatch.web.demo.server.GreetingServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>greetServlet</servlet-name>
+        <url-pattern>/webdemo/greet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>WebDemo.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>
