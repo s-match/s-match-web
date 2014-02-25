@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- enable properties resolution -->
+    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties" />
+    <context:property-placeholder properties-ref="smatchwebProperties"/>
+
+    <context:annotation-config/>
+    <context:component-scan base-package="it.unitn.disi.smatch.web.server.web"/>
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <!-- define bean to resolve view -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="exposedContextBeanNames">
+            <list><value>smatchwebProperties</value></list>
+        </property>
+    </bean>
+
+    <bean id="httpResponseStatusExceptionResolver" class="it.unitn.disi.smatch.web.server.web.handlers.HTTPResponseStatusExceptionResolver"/>
+</beans>

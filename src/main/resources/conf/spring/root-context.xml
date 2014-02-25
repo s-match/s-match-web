@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:security="http://www.springframework.org/schema/security"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <!-- enable properties resolution -->
+    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties" />
+    <context:property-placeholder properties-ref="smatchwebProperties"/>
+
+    <!-- make our application annotation based -->
+    <context:annotation-config/>
+    <context:component-scan base-package="it.unitn.disi.smatch.web.server.common"/>
+
+    <!-- anonymous authentication for all -->
+    <bean id="commonFilterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+        <constructor-arg>
+            <list>
+                <security:filter-chain pattern="/favicon.ico" filters=""/>
+                <security:filter-chain pattern="/**" filters="anonymousAuthFilter"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="anonymousAuthFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+        <constructor-arg index="0" value="anon-key"/>
+    </bean>
+</beans>

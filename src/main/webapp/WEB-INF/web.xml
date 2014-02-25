@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
-         xmlns="http://java.sun.com/xml/ns/javaee">
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <!-- Servlets -->
-    <servlet>
-        <servlet-name>greetServlet</servlet-name>
-        <servlet-class>it.unitn.disi.smatch.web.demo.server.GreetingServiceImpl</servlet-class>
-    </servlet>
+    <display-name>S-Match Web</display-name>
+    <description>S-Match Web provides a web service and a user interface for accessing S-Match online.</description>
 
-    <servlet-mapping>
-        <servlet-name>greetServlet</servlet-name>
-        <url-pattern>/webdemo/greet</url-pattern>
-    </servlet-mapping>
+    <!--
+        - Key of the system property that should specify the root directory of this
+        - web app. Applied by WebAppRootListener or Log4jConfigListener.
+    -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>smatchweb.root</param-value>
+    </context-param>
 
-    <!-- Default page to serve -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:conf/log4j/log4j.properties</param-value>
+    </context-param>
+
+    <!--
+         - Configures Log4J for this web app.
+         - As this context specifies a context-param "log4jConfigLocation", its file path
+         - is used to load the Log4J configuration, including periodic refresh checks.
+         -
+         - Would fall back to default Log4J initialization (non-refreshing) if no special
+         - context-params are given.
+         -
+         - Exports a "web app root key", i.e. a system property that specifies the root
+         - directory of this web app, for usage in log file paths.
+         - This web app specifies "petclinic.root" (see log4j.properties file).
+     -->
+    <!-- Leave the listener commented-out if using JBoss -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+    <!-- Disables Servlet Container welcome file handling. Needed for compatibility with Servlet 3.0 and Tomcat 7.0 -->
     <welcome-file-list>
-        <welcome-file>WebDemo.html</welcome-file>
+        <welcome-file/>
     </welcome-file-list>
-
 </web-app>

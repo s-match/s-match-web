@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:security="http://www.springframework.org/schema/security"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- enable properties resolution -->
+    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties" />
+    <context:property-placeholder properties-ref="smatchwebProperties"/>
+
+    <!-- make our application annotation based -->
+    <context:annotation-config/>
+    <context:component-scan base-package="it.unitn.disi.smatch.web.server.api"/>
+    <mvc:annotation-driven/>
+
+    <!-- api -->
+    <bean id="apiFilterChainProxy" class="it.unitn.disi.smatch.web.server.api.handlers.ExceptionHandlingFilterChainProxy">
+        <property name="exceptionResolver" ref="restExceptionResolver"/>
+        <constructor-arg>
+            <list>
+                <security:filter-chain pattern="/webapi/**" filters=""/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- json exception rendering with message localization support -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames" value="classpath:smatchweb-messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <!-- Allow Exceptions to be handled in annotated methods if desired.  Otherwise fallback to the 'restExceptionResolver' below: -->
+    <bean id="annotationMethodHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+        <property name="order" value="0"/>
+    </bean>
+    <bean id="restExceptionResolver"
+          class="it.unitn.disi.smatch.web.server.api.handlers.ExceptionDetailsExceptionResolver">
+        <property name="order" value="100"/>
+        <property name="errorResolver">
+            <bean class="it.unitn.disi.smatch.web.server.api.handlers.DefaultExceptionDetailsResolver">
+                <property name="localeResolver" ref="localeResolver"/>
+                <property name="messageSource" ref="messageSource"/>
+                <property name="defaultExplanationMessage" value="error.default.explanation"/>
+                <property name="defaultWhatToDoMessage" value="error.default.whattodo"/>
+                <property name="exceptionMappingDefinitions">
+                    <map>
+                        <!-- 500 (catch all): -->
+                        <entry key="Throwable" value="status=500, msg=error.generic"/>
+
+                        <entry key="UnsupportedOperationException"
+                               value="status=501, msg=error.UnsupportedOperationException, emsg=error.UnsupportedOperationException.explanation, wmsg=error.UnsupportedOperationException.whattodo"/>
+
+                        <entry key="DISIException" value="status=500, msg=_exmsg"/>
+                        <entry key="IllegalArgumentException" value="status=400, msg=_exmsg"/>
+                        <entry key="IllegalStateException" value="status=500, msg=_exmsg"/>
+                        <entry key="InvalidStateException" value="status=500, msg=_exmsg"/>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>
