@@ -42,7 +42,7 @@ private DialogBox createErrorDialogBox(String errStr){
 	VerticalPanel vPanel = new VerticalPanel();
 	dialogBox.setWidget(vPanel);
 	
-	
+	vPanel.setStyleName("error");
 	 // Add a label
 	    vPanel.add(new HTML("<p>"+errStr+"</p>"));
         

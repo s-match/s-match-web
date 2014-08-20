@@ -15,6 +15,7 @@ public class MsgPopUp {
 		DBTError = createErrorDialogBox(errStr);
 		DBTError.setGlassEnabled(true);
 		DBTError.setAnimationEnabled(true);
+		DBTError.setStyleName("error");
 		
 	}
 
