@@ -1,9 +1,9 @@
-package it.unitn.disi.smatch.web.shared.model.trees;
+package main.java.it.unitn.disi.smatch.web.shared.model.trees;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import it.unitn.disi.smatch.web.shared.model.IndexedObject;
+import main.java.it.unitn.disi.smatch.web.shared.model.IndexedObject;
 
 import java.util.*;
 

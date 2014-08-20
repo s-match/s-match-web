@@ -1,9 +1,9 @@
-package it.unitn.disi.smatch.web.server.api;
+package main.java.it.unitn.disi.smatch.web.server.api;
 
-import it.unitn.disi.smatch.SMatchException;
-import it.unitn.disi.smatch.data.mappings.IContextMapping;
-import it.unitn.disi.smatch.data.trees.INode;
-import it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
+import main.java.it.unitn.disi.smatch.SMatchException;
+import main.java.it.unitn.disi.smatch.data.mappings.IContextMapping;
+import main.java.it.unitn.disi.smatch.data.trees.INode;
+import main.java.it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
 
 /**
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>

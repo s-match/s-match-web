@@ -1,12 +1,12 @@
-package it.unitn.disi.smatch.web.server.api.controllers;
+package main.java.it.unitn.disi.smatch.web.server.api.controllers;
 
-import it.unitn.disi.common.components.ConfigurableException;
-import it.unitn.disi.smatch.SMatchException;
-import it.unitn.disi.smatch.data.mappings.IContextMapping;
-import it.unitn.disi.smatch.data.trees.INode;
-import it.unitn.disi.smatch.web.server.api.IMatchAPI;
-import it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
-import it.unitn.disi.smatch.web.server.api.service.IMatchService;
+import main.java.it.unitn.disi.common.components.ConfigurableException;
+import main.java.it.unitn.disi.smatch.SMatchException;
+import main.java.it.unitn.disi.smatch.data.mappings.IContextMapping;
+import main.java.it.unitn.disi.smatch.data.trees.INode;
+import main.java.it.unitn.disi.smatch.web.server.api.IMatchAPI;
+import main.java.it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
+import main.java.it.unitn.disi.smatch.web.server.api.service.IMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

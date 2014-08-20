@@ -1,7 +1,7 @@
-package it.unitn.disi.smatch.web.server.api.handlers;
+package main.java.it.unitn.disi.smatch.web.server.api.handlers;
 
-import it.unitn.disi.smatch.web.shared.model.exceptions.ExceptionDetails;
-import it.unitn.disi.smatch.web.shared.model.exceptions.HTTPResponseStatus;
+import main.java.it.unitn.disi.smatch.web.shared.model.exceptions.ExceptionDetails;
+import main.java.it.unitn.disi.smatch.web.shared.model.exceptions.HTTPResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;

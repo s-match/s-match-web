@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.server;
+package main.java.it.unitn.disi.smatch.web.server;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -15,7 +15,6 @@ import java.util.Set;
  */
 public class WebAppInitializer implements WebApplicationInitializer {
 
-    @Override
     public void onStartup(ServletContext container) {
         XmlWebApplicationContext rootContext = new XmlWebApplicationContext();
         rootContext.setConfigLocation("classpath:conf/spring/root-context.xml");

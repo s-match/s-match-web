@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model;
+package main.java.it.unitn.disi.smatch.web.shared.model;
 
 /**
  * Objects which could be referenced by index. Used to store relations in the matrices.

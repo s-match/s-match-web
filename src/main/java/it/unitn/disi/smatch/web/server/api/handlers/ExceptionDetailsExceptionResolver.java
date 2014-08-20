@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unitn.disi.smatch.web.server.api.handlers;
+package main.java.it.unitn.disi.smatch.web.server.api.handlers;
 
-import it.unitn.disi.smatch.web.shared.model.exceptions.ExceptionDetails;
+import main.java.it.unitn.disi.smatch.web.shared.model.exceptions.ExceptionDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
