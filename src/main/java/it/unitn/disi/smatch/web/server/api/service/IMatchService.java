@@ -1,6 +1,6 @@
-package it.unitn.disi.smatch.web.server.api.service;
+package main.java.it.unitn.disi.smatch.web.server.api.service;
 
-import it.unitn.disi.smatch.web.server.api.IMatchAPI;
+import main.java.it.unitn.disi.smatch.web.server.api.IMatchAPI;
 
 /**
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>

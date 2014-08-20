@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.mappings;
+package main.java.it.unitn.disi.smatch.web.shared.model.mappings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unitn.disi.smatch.web.shared.model.IIndexedObject;

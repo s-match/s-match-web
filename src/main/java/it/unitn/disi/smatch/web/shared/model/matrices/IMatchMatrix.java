@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.matrices;
+package main.java.it.unitn.disi.smatch.web.shared.model.matrices;
 
 /**
  * An interface to a matrix with matching results.

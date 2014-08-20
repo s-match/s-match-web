@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.exceptions;
+package main.java.it.unitn.disi.smatch.web.shared.model.exceptions;
 
 /**
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>

@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.server.api.handlers;
+package main.java.it.unitn.disi.smatch.web.server.api.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

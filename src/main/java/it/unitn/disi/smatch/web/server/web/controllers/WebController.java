@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.server.web.controllers;
+package main.java.it.unitn.disi.smatch.web.server.web.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.exceptions;
+package main.java.it.unitn.disi.smatch.web.shared.model.exceptions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model;
+package main.java.it.unitn.disi.smatch.web.shared.model;
 
 /**
  * An object with an index.

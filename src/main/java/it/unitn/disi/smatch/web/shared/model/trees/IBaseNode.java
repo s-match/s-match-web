@@ -1,6 +1,6 @@
-package it.unitn.disi.smatch.web.shared.model.trees;
+package main.java.it.unitn.disi.smatch.web.shared.model.trees;
 
-import it.unitn.disi.smatch.web.shared.model.IIndexedObject;
+import main.java.it.unitn.disi.smatch.web.shared.model.IIndexedObject;
 
 import java.util.Iterator;
 import java.util.List;
