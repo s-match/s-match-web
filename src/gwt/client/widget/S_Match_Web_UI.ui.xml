@@ -1,0 +1,251 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+	xmlns:w="urn:import:com.google.gwt.widget.client" xmlns:cc='urn:import:gwt.client' xmlns:a="urn:import:com.google.gwt.dev.asm">
+	<ui:style>
+	.important {
+		font-weight: bold;
+	}
+	
+	.tree {
+		width: 500px;
+		border: 1px solid #ccc;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="body" height="1000px">
+		<g:MenuBar>
+			<g:MenuItem text="" />
+			<g:MenuItem text="" />
+		</g:MenuBar>
+		<g:DockLayoutPanel unit="EM" width="100%" height="1000px">
+			<g:north size="8.1">
+				<g:SimplePanel width="100%" styleName="header">
+					<g:HorizontalPanel width="100%" height="100%">
+						<g:Cell verticalAlignment="ALIGN_MIDDLE">
+							<g:HorizontalPanel height="50">
+								<g:Cell horizontalAlignment="ALIGN_CENTER"
+									verticalAlignment="ALIGN_MIDDLE" width="40px" height="50px">
+									<g:Label text="Mapping:" styleName="label" height="26px" />
+								</g:Cell>
+								<g:SimplePanel styleName="wrapper">
+									<g:Button styleName="button" ui:field="createbtn"
+										width="100%" height="100%">
+										<img src="icons/SourceandTarget/share.svg" title="Create Mapping" class="icon"/>
+										<div><label>Map</label>
+													</div>
+									</g:Button>
+								</g:SimplePanel>
+								<g:SimplePanel styleName="wrapper">
+									<g:Button ui:field="savebtn" width="100%" height="100%" styleName="button" enabled="false">
+										<img src="icons/SourceandTarget/document-save.svg" title="Save Mapping"  class="icon"/>
+										<div><label>Save</label>
+													</div>
+									</g:Button>
+								</g:SimplePanel>
+							</g:HorizontalPanel>
+						</g:Cell>
+						<g:Cell verticalAlignment="ALIGN_MIDDLE">
+							<g:HorizontalPanel>
+								<g:Cell width="40px" horizontalAlignment="ALIGN_CENTER"
+									verticalAlignment="ALIGN_MIDDLE">
+									<g:Label text="Configuration:" styleName="label"
+										height="26px" />
+								</g:Cell>
+								<g:Cell width="40px" horizontalAlignment="ALIGN_CENTER"
+									verticalAlignment="ALIGN_MIDDLE">
+									<g:ListBox ui:field="cbConfig" />
+								</g:Cell>
+							</g:HorizontalPanel>
+						</g:Cell><g:Cell verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER">
+						<g:HorizontalPanel height="105px">
+							<g:VerticalPanel>
+								<g:Cell horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+									<g:Image url="icons/s-match.svg" height="62px" altText="S-Match Web" width="70px" />
+								</g:Cell>
+								<g:Cell verticalAlignment="ALIGN_BOTTOM" horizontalAlignment="ALIGN_CENTER">
+									<g:Label text="S-Match"/>
+								</g:Cell>
+							</g:VerticalPanel>
+						</g:HorizontalPanel></g:Cell>
+						
+
+
+					</g:HorizontalPanel>
+				</g:SimplePanel>
+			</g:north>
+			<g:center>
+				<g:SplitLayoutPanel width="100%" height="800px">
+					<g:south size="300.0">
+						<g:SimplePanel width="100%">
+						<g:ScrollPanel height="300px">
+							<c:CellTable ui:field='cellTable' styleName="table" />
+							</g:ScrollPanel>
+						</g:SimplePanel>
+					</g:south>
+
+					<g:center>
+						<g:HorizontalSplitPanel>
+							<g:SimplePanel width="" height="100%" styleName="tree">
+								<g:DockLayoutPanel width="100%" height="100%">
+									<g:north size="134.0">
+									
+										<g:SimplePanel width="307" height="" >
+											<g:VerticalPanel width="100%" height="100%" horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+												<g:SimplePanel styleName="caption" height="35px">
+													<g:Label text="Source Tree" width="100%" height="100%" />
+												</g:SimplePanel>
+											<g:HorizontalPanel
+												verticalAlignment="ALIGN_MIDDLE" height="60px" styleName="sub_header" width="99%">
+
+												<g:SimplePanel styleName="wrapper">
+													<g:Button ui:field="createSource" styleName="button">
+														<img src="icons/SourceandTarget/document-new.svg" class="icon" title="Create Source Tree" />
+														<div><label>New</label>
+													</div>
+														
+													</g:Button>
+												</g:SimplePanel>
+												<g:SimplePanel styleName="wrapper">
+													<g:Button ui:field="addSourceNode" styleName="button">
+														<img src="icons/SourceandTarget/list-add.svg" title="Add Node" class="icon" />
+														<div><label>Add Node</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<g:SimplePanel styleName="wrapper">
+													<g:Button styleName="button" ui:field="addSourceChildNode" width="72" height="85">
+														<img src="icons/SourceandTarget/addchild.svg" title="Add Child Node"  class="icon"/>
+														<div><label>Add ChildNode</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<g:SimplePanel styleName="wrapper">
+													<g:Button ui:field="deleteSourceNode" styleName="button" enabled="false">
+														<img src="icons/SourceandTarget/list-remove.svg" title="Delete Node" class="icon"/>
+														<div><label>Delete Node</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<!-- <g:SimplePanel styleName="wrapper">
+													<g:Button styleName="button" ui:field="coalesceSource" enabled="false">
+														<img src="icons/SourceandTarget/view-fullscreen.svg" title="Coalesce Source Tree" class="icon" />
+														<div><label>Coalesce</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel> -->
+
+											</g:HorizontalPanel>
+											<g:SimplePanel styleName="hidden" height="35px">
+													<g:Label ui:field="sourceError" width="100%" height="100%" />
+											</g:SimplePanel>
+										</g:VerticalPanel>
+										</g:SimplePanel>
+									</g:north>
+									<g:center>
+										<g:TabPanel width="100%" height="100%" ui:field="treeSourceOptionTabs">
+										<g:Tab><g:TabHTML>Graphical Tree</g:TabHTML>
+    										<g:ScrollPanel height="100%" width="100%">
+            									<!-- tab contents goes here -->
+        										<c:CellTree addStyleNames='{style.tree}' ui:field='cellTreeSource'
+												width="98%" height="300px" styleName="treeBox" focus="true" />
+												</g:ScrollPanel>
+												</g:Tab>
+										<g:Tab><g:TabHTML>Textual Tree</g:TabHTML>
+    										<g:VerticalPanel height="100%" width="99%">
+            									<!-- tab contents goes here -->
+        										<g:Label text="&quot;Add textual data:(Level, Label, Parent Label;)"/>
+        										<g:TextArea addStyleNames='{style.tree}' ui:field='textTreeSource'
+												width="98%" height="206px" styleName="treeBox" visibleLines="20" />
+        										<g:Button ui:field="saveSourceTreeText">Save</g:Button>
+												</g:VerticalPanel>
+												</g:Tab>	
+										</g:TabPanel>
+									</g:center>
+								</g:DockLayoutPanel>
+							</g:SimplePanel>
+							<g:SimplePanel width="" height="100%" styleName="tree">
+								<g:DockLayoutPanel width="100%" height="100%">
+									<g:north size="134.0">
+										<g:SimplePanel width="307" height="" >
+										<g:VerticalPanel width="100%" height="100%" horizontalAlignment="ALIGN_CENTER" verticalAlignment="ALIGN_MIDDLE">
+												<g:SimplePanel styleName="caption" height="35px">
+													<g:Label text="Target Tree" width="100%" height="100%"/>
+												</g:SimplePanel>
+											<g:HorizontalPanel width="99%" height="60px" 
+												verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_LEFT" styleName="sub_header">
+
+												<g:SimplePanel styleName="wrapper">
+													<g:Button styleName="button" ui:field="createTarget">
+														<img src="icons/SourceandTarget/document-new.svg" title="Create Target Tree" class="icon"/>
+														<div><label>New</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<g:SimplePanel styleName="wrapper">
+													<g:Button ui:field="addTargetNode" styleName="button" >
+														<img src="icons/SourceandTarget/list-add.svg" title="Add Node" class="icon"/>
+														<div><label>Add Node</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<g:SimplePanel styleName="wrapper">
+													<g:Button styleName="button" ui:field="addTargetChildNode">
+														<img src="icons/SourceandTarget/addchild.svg" title="Add Child Node" class="icon"/>
+														<div><label>Add ChildNode</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<g:SimplePanel styleName="wrapper">
+													<g:Button ui:field="deleteTargetNode" styleName="button">
+															<img src="icons/SourceandTarget/list-remove.svg" title="Delete Node" class="icon"/>
+															<div><label>Delete Node</label>
+													</div>
+													</g:Button>
+												</g:SimplePanel>
+												<!-- <g:SimplePanel styleName="wrapper">
+													<g:Button styleName="button" ui:field="coalesceTarget">
+													
+													<img src="icons/SourceandTarget/view-fullscreen.svg" title="Coalesce Target Tree" class="icon"/>
+													<div><label>Coalesce</label>
+													</div>
+														
+													</g:Button>
+												</g:SimplePanel> -->
+
+											</g:HorizontalPanel>
+											<g:SimplePanel styleName="hidden" height="35px">
+													<g:Label ui:field="targetError" width="100%" height="100%" />
+											</g:SimplePanel>
+										</g:VerticalPanel>
+										</g:SimplePanel>
+									</g:north>
+									<g:center>
+										<g:TabPanel width="100%" height="100%" ui:field="treeTargetOptionTabs">
+										<g:Tab><g:TabHTML>Graphical Tree</g:TabHTML>
+    										<g:ScrollPanel height="100%" width="100%">
+            									<!-- tab contents goes here -->
+        										<c:CellTree addStyleNames='{style.tree}' ui:field='cellTreeTarget'
+												width="98%" height="300px" styleName="treeBox" focus="true" />
+												</g:ScrollPanel>
+												</g:Tab>
+										<g:Tab><g:TabHTML>Textual Tree</g:TabHTML>
+    										<g:VerticalPanel height="100%" width="99%">
+            									<!-- tab contents goes here -->
+        										<g:Label text="&quot;Add textual data:(Level, Label, Parent Label;)"/>
+        										<g:TextArea addStyleNames='{style.tree}' ui:field='textTreeTarget'
+												width="98%" height="206px" styleName="treeBox" visibleLines="20" />
+        										<g:Button ui:field="saveTargetTreeText">Save</g:Button>
+												</g:VerticalPanel>
+												</g:Tab>	
+										</g:TabPanel>
+									</g:center>
+								</g:DockLayoutPanel>
+							</g:SimplePanel>
+						</g:HorizontalSplitPanel>
+					</g:center>
+				</g:SplitLayoutPanel>
+			</g:center>
+		</g:DockLayoutPanel>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

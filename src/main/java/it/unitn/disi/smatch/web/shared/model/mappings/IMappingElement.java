@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.mappings;
+package main.java.it.unitn.disi.smatch.web.shared.model.mappings;
 
 /**
  * Interface for a mapping element.

@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.trees;
+package main.java.it.unitn.disi.smatch.web.shared.model.trees;
 
 /**
  * Listener for the tree structure changed event.

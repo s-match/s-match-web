@@ -1,7 +1,7 @@
-package it.unitn.disi.smatch.web.shared.model.mappings;
+package main.java.it.unitn.disi.smatch.web.shared.model.mappings;
 
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseContext;
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseNode;
+import main.java.it.unitn.disi.smatch.web.shared.model.trees.IBaseContext;
+import main.java.it.unitn.disi.smatch.web.shared.model.trees.IBaseNode;
 
 /**
  * Produces mappings.

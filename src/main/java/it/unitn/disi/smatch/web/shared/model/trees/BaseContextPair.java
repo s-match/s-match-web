@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared.model.trees;
+package main.java.it.unitn.disi.smatch.web.shared.model.trees;
 
 /**
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>

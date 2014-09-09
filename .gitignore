@@ -1,5 +1,10 @@
-target/*
-.project
+/target/
+
+.gwt/
 .settings/
-*.iml
-.idea
+gwt-unitCache/
+test/
+test-classes/
+.classpath/
+.project/
+

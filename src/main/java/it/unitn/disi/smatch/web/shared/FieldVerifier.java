@@ -1,4 +1,4 @@
-package it.unitn.disi.smatch.web.shared;
+package main.java.it.unitn.disi.smatch.web.shared;
 
 /**
  * <p>

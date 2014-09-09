@@ -1,6 +1,6 @@
-package it.unitn.disi.smatch.web.server.web.handlers;
+package main.java.it.unitn.disi.smatch.web.server.web.handlers;
 
-import it.unitn.disi.smatch.web.shared.model.exceptions.HTTPResponseStatus;
+import main.java.it.unitn.disi.smatch.web.shared.model.exceptions.HTTPResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
