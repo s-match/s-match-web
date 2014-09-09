@@ -77,7 +77,9 @@
 				<g:SplitLayoutPanel width="100%" height="800px">
 					<g:south size="300.0">
 						<g:SimplePanel width="100%">
-							<c:CellTable ui:field='cellTable' width="100%" height="200px" styleName="table" />
+						<g:ScrollPanel height="300px">
+							<c:CellTable ui:field='cellTable' styleName="table" />
+							</g:ScrollPanel>
 						</g:SimplePanel>
 					</g:south>
 

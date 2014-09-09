@@ -10,7 +10,7 @@ public class MatchLog {
 	}
 
 	public String getRelation() {
-		return relation;
+			return relation;
 	}
 
 	public String getTarget() {

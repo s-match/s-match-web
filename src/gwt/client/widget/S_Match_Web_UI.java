@@ -1,18 +1,26 @@
 package gwt.client.widget;
 
+import java.util.ArrayList;
+
+import gwt.client.model.CustomTableResource;
 import gwt.client.model.CustomTreeModel;
 import gwt.client.model.MatchLog;
+import gwt.client.model.RelationCell;
 import gwt.client.model.TNode;
 
+import com.google.gwt.cell.client.Cell.Context;
+import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.CellTree;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TreeNode;
@@ -77,10 +85,31 @@ public class S_Match_Web_UI extends Composite {
 
 	public S_Match_Web_UI() {
 
+		/*
+		 * Create the source and target trees
+		 */
 		createCellTrees();
+		/*
+		 * Create the table
+		 */
 		createCellTable();
+		
+		/*
+		 * Create and fill the matching options
+		 */
 		createMatchComboBox();
+		
+		/*
+		 * initialize everything else, through the xml file.
+		 */
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		/*
+		 * Everything exists, so now we can refresh the textareas for source and target
+		 * To have the default data in them.
+		 */
+		refreshSourceText();
+		refreshTargetText();
 	}
 
 	private void createMatchComboBox() {
@@ -99,12 +128,20 @@ public class S_Match_Web_UI extends Composite {
 		TreeViewModel modelTarget = new CustomTreeModel();
 
 		cellTreeSource = new CellTree(modelSource, null);
+		
 		cellTreeTarget = new CellTree(modelTarget, null);
+		
 
 	}
 
 	public void createCellTable() {
-		cellTable = new CellTable<MatchLog>();
+		
+		CellTable.Resources resource = GWT.create(CustomTableResource.class);
+		cellTable = new CellTable<MatchLog>(1,resource);
+		
+		/*
+		 * Source cell column
+		 */
 		TextColumn<MatchLog> sourceColumn = new TextColumn<MatchLog>() {
 			@Override
 			public String getValue(MatchLog match) {
@@ -112,22 +149,33 @@ public class S_Match_Web_UI extends Composite {
 			}
 		};
 
-		// to algin the table title to center
+		// to align the table title to center
 		sourceColumn
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		// Make the name column sortable.
 		sourceColumn.setSortable(true);
 
-		TextColumn<MatchLog> relationColumn = new TextColumn<MatchLog>() {
+		/*
+		 * Relation cell column.$
+		 */
+		
+		RelationCell relationCell = new RelationCell();
+		Column<MatchLog,String> relationColumn = new Column<MatchLog,String>(relationCell) {
 			@Override
 			public String getValue(MatchLog match) {
 				return match.getRelation();
 			}
+			
 		};
 		relationColumn
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		// Make the name column sortable.
 		relationColumn.setSortable(true);
+		
+		
+		/*
+		 * Target cell column.$
+		 */
 		TextColumn<MatchLog> targetColumn = new TextColumn<MatchLog>() {
 			@Override
 			public String getValue(MatchLog match) {
@@ -139,6 +187,7 @@ public class S_Match_Web_UI extends Composite {
 		// Make the name column sortable.
 		targetColumn.setSortable(true);
 
+		
 		// Add the columns.
 
 		SafeHtmlHeader sourceHeader = new SafeHtmlHeader(new SafeHtml() {
@@ -179,6 +228,85 @@ public class S_Match_Web_UI extends Composite {
 			}
 		});
 		cellTable.addColumn(targetColumn, targetHeader);
+	}
+	
+	@UiHandler("createbtn")
+	void onCreateBtnClick(ClickEvent event){
+		/*
+		 * Validate the source and target text area for valid data.$
+		 */
+		String ext_treeSourceData = textTreeSource.getText();
+		if (!validateText(ext_treeSourceData)) {
+			return;
+		}
+		
+		String ext_treeTargetData = textTreeTarget.getText();
+		if (!validateText(ext_treeTargetData)) {
+			return;
+		}
+		
+		/*
+		 * Fetch tree models for both source and target.$ 
+		 */
+		CustomTreeModel modelSourceTree = (CustomTreeModel) this.cellTreeSource
+				.getTreeViewModel();
+		CustomTreeModel modelTargetTree = (CustomTreeModel) this.cellTreeTarget
+				.getTreeViewModel();
+		
+		/*
+		 * Match the two models
+		 */
+		ArrayList<MatchLog> matchedModels = matchModels(modelSourceTree.getAllNodes(),modelTargetTree.getAllNodes());
+		
+		
+		/*
+		 * Display the related models in the table.
+		 */
+		cellTable.setRowData(matchedModels);
+		
+		
+		
+	}
+	
+	/*
+	 * Match elements of two lists. $
+	 */
+	private ArrayList<MatchLog> matchModels(ArrayList<TNode> sourceNodes,
+			ArrayList<TNode> targetNodes) {
+		
+		ArrayList<MatchLog> relatedNodes = new ArrayList<MatchLog>();
+		/*
+		 * Iterate over the source tree.$
+		 */
+		for(int i=0; i<sourceNodes.size();i++){
+			
+			/*
+			 * Pick a source node to match.$
+			 */
+			TNode currSourceNode = (TNode)(sourceNodes.get(i));
+			/*
+			 * Iterate over the target tree.$
+			 */
+			System.out.println("currSource:"+currSourceNode.getNodeLabel());
+			for(int j=0;j<targetNodes.size();j++){
+				/*
+				 * Pick a target node and match the source node with it.$
+				 */
+				TNode currTargetNode = (TNode)targetNodes.get(j);
+				
+				/*
+				 * Apply str comparison on the labels of the two nodes.
+				 */
+				System.out.println("currTarget:"+currTargetNode.getNodeLabel());
+				if(currSourceNode.getNodeLabel().equalsIgnoreCase(currTargetNode.getNodeLabel())){
+					relatedNodes.add(new MatchLog(currSourceNode.getNodeLabel(),"Equivalence",currTargetNode.getNodeLabel()));
+					System.out.println(currSourceNode.getNodeLabel()+"=="+currTargetNode.getNodeLabel());
+				}
+			}
+			
+			
+		}
+		return relatedNodes;
 	}
 
 	@UiHandler("saveSourceTreeText")
@@ -437,7 +565,10 @@ public class S_Match_Web_UI extends Composite {
 		CustomTreeModel model = (CustomTreeModel) this.cellTreeTarget
 				.getTreeViewModel();
 		TNode selNode = model.getSelectionModel().getSelectedObject();
-
+		if (selNode == null) {
+			showError("No node selected");
+			return;
+		}
 		if (selNode != null) {
 
 			model.createDefault(selNode);
