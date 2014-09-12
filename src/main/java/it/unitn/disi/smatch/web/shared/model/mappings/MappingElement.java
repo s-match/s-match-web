@@ -7,9 +7,9 @@ package it.unitn.disi.smatch.web.shared.model.mappings;
  */
 public class MappingElement<T> implements IMappingElement<T> {
 
-    protected T source;
-    protected T target;
-    protected char relation;
+    protected final T source;
+    protected final T target;
+    protected final char relation;
 
     public MappingElement(T source, T target, char relation) {
         this.source = source;

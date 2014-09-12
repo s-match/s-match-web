@@ -113,7 +113,7 @@ public class DefaultExceptionDetailsResolver implements ExceptionDetailsResolver
     }
 
     private Map<String, String> createDefaultExceptionMappingDefinitions() {
-        Map<String, String> m = new LinkedHashMap<String, String>();
+        Map<String, String> m = new LinkedHashMap<>();
 
         // 400
         applyDef(m, HttpMessageNotReadableException.class, HttpStatus.BAD_REQUEST);
@@ -291,7 +291,7 @@ public class DefaultExceptionDetailsResolver implements ExceptionDetailsResolver
             return Collections.emptyMap();
         }
 
-        Map<String, ExceptionDetails> map = new LinkedHashMap<String, ExceptionDetails>(smap.size());
+        Map<String, ExceptionDetails> map = new LinkedHashMap<>(smap.size());
 
         for (Map.Entry<String, String> entry : smap.entrySet()) {
             String key = entry.getKey();

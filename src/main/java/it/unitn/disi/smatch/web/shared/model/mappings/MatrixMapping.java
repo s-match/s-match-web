@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> implements IContextMapping<T>, IMappingFactory {
 
-    protected IMatchMatrix matrix;
+    protected final IMatchMatrix matrix;
 
     // for set size();
     private int elementCount;
@@ -86,7 +86,7 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
             while (curRow < matrix.getX() && curCol < matrix.getY() && IMappingElement.IDK == (relation = matrix.get(curRow, curCol)));
 
             if (IMappingElement.IDK != relation) {
-                result = new MappingElement<T>(sources[curRow], targets[curCol], relation);
+                result = new MappingElement<>(sources[curRow], targets[curCol], relation);
             }
             return result;
         }
@@ -152,11 +152,11 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
     public List<IMappingElement<T>> getSources(final T source) {
         final int sIdx = source.getIndex();
         if (0 <= sIdx && sIdx < sources.length && (source == sources[sIdx])) {
-            ArrayList<IMappingElement<T>> result = new ArrayList<IMappingElement<T>>();
+            ArrayList<IMappingElement<T>> result = new ArrayList<>();
             for (int j = 0; j < targets.length; j++) {
                 char rel = matrix.get(sIdx, j);
                 if (IMappingElement.IDK != rel) {
-                    result.add(new MappingElement<T>(sources[sIdx], targets[j], rel));
+                    result.add(new MappingElement<>(sources[sIdx], targets[j], rel));
                 }
             }
             return result;
@@ -168,11 +168,11 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
     public List<IMappingElement<T>> getTargets(T target) {
         final int tIdx = target.getIndex();
         if (0 <= tIdx && tIdx < targets.length && (target == targets[tIdx])) {
-            ArrayList<IMappingElement<T>> result = new ArrayList<IMappingElement<T>>();
+            ArrayList<IMappingElement<T>> result = new ArrayList<>();
             for (int i = 0; i < sources.length; i++) {
                 char rel = matrix.get(i, tIdx);
                 if (IMappingElement.IDK != rel) {
-                    result.add(new MappingElement<T>(sources[i], targets[tIdx], rel));
+                    result.add(new MappingElement<>(sources[i], targets[tIdx], rel));
                 }
             }
             return result;

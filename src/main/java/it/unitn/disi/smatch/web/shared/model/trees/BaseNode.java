@@ -71,14 +71,14 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
-    class BreadthFirstSearch<E extends IBaseNode> implements Iterator<E> {
+    class BreadthFirstSearch implements Iterator<E> {
         private LinkedList<E> queue;
 
         public BreadthFirstSearch(E start) {
             if (null == start) {
                 throw new IllegalArgumentException("argument is null");
             }
-            queue = new LinkedList<E>();
+            queue = new LinkedList<>();
             queue.addFirst(start);
             next();
         }
@@ -206,7 +206,7 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
 
         child.setParent(this);
         if (null == children) {
-            children = new ArrayList<E>();
+            children = new ArrayList<>();
         }
         children.add(index, child);
         fireTreeStructureChanged((E) this);
@@ -273,7 +273,7 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
 
     public List<E> getAncestorsList() {
         if (null == ancestors) {
-            ancestors = new ArrayList<E>(getAncestorCount());
+            ancestors = new ArrayList<>(getAncestorCount());
             if (null != parent) {
                 ancestors.add(parent);
                 ancestors.addAll(parent.getAncestorsList());
@@ -302,12 +302,12 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
     }
 
     public Iterator<E> getDescendants() {
-        return new BreadthFirstSearch<E>((E) this);
+        return new BreadthFirstSearch((E) this);
     }
 
     public List<E> getDescendantsList() {
         if (null == descendants) {
-            descendants = new ArrayList<E>(getChildCount());
+            descendants = new ArrayList<>(getChildCount());
             if (null != children) {
                 descendants.addAll(children);
                 for (IBaseNode child : children) {
@@ -320,7 +320,7 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
     }
 
     public Iterator<E> getSubtree() {
-        return new StartIterator<E>((E) this, getDescendants());
+        return new StartIterator<>((E) this, getDescendants());
     }
 
     public I getNodeData() {
@@ -385,7 +385,7 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
 
     public void addTreeStructureChangedListener(IBaseTreeStructureChangedListener<E> l) {
         if (null == listenerList) {
-            listenerList = new ArrayList<Object>();
+            listenerList = new ArrayList<>();
         }
         listenerList.add(l);
     }

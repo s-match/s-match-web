@@ -115,7 +115,7 @@ public class ExceptionDetailsExceptionResolver extends AbstractHandlerExceptionR
     }
 
     private void ensureMessageConverters() {
-        List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
 
         new HttpMessageConverterHelper().addDefaults(converters);
 
