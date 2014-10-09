@@ -12,28 +12,18 @@ import java.util.*;
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-@SuppressWarnings({"unchecked"})
-public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends IndexedObject implements IBaseNode<E, I>, IBaseNodeData {
+public class BaseNode extends IndexedObject {
 
     @JsonBackReference("children")
-    protected E parent;
+    protected BaseNode parent;
     @JsonManagedReference("children")
-    protected ArrayList<E> children;
-
-    @JsonIgnore
-    protected ArrayList<E> ancestors;
-    @JsonIgnore
-    protected int ancestorCount;
-    @JsonIgnore
-    protected ArrayList<E> descendants;
-    @JsonIgnore
-    protected int descendantCount;
+    protected List<BaseNode> children;
 
     @JsonIgnore
     protected List<Object> listenerList;
 
-    // id is needed to store cNodeFormulas correctly.
-    // cNodeFormula is made of cLabFormulas, each of which refers to tokens and tokens should have unique id
+    // id is needed to store nodeFormulas correctly.
+    // nodeFormula is made of labelFormulas, each of which refers to tokens and tokens should have unique id
     // within a context. This is achieved by using node id + token id for each token
     protected String id;
     protected String name;
@@ -46,11 +36,10 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
     protected static long countNode = 0;
 
     // iterator which iterates over all parent nodes
+    private final class AncestorsIterator implements Iterator<BaseNode> {
+        private BaseNode current;
 
-    private final class Ancestors implements Iterator<E> {
-        private E current;
-
-        public Ancestors(E start) {
+        public AncestorsIterator(BaseNode start) {
             if (null == start) {
                 throw new IllegalArgumentException("argument is null");
             }
@@ -61,8 +50,8 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
             return current.hasParent();
         }
 
-        public E next() {
-            current = (E) current.getParent();
+        public BaseNode next() {
+            current = current.getParent();
             return current;
         }
 
@@ -71,26 +60,27 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
-    class BreadthFirstSearch implements Iterator<E> {
-        private LinkedList<E> queue;
+    private class BreadthFirstSearchIterator implements Iterator<BaseNode> {
+        private final LinkedList<BaseNode> queue;
 
-        public BreadthFirstSearch(E start) {
+        public BreadthFirstSearchIterator(BaseNode start) {
             if (null == start) {
-                throw new IllegalArgumentException("argument is null");
+                throw new IllegalArgumentException("start is required");
             }
-            queue = new LinkedList<>();
-            queue.addFirst(start);
-            next();
+            this.queue = new LinkedList<>();
+            this.queue.addAll(start.getChildren());
         }
 
         public boolean hasNext() {
             return !queue.isEmpty();
         }
 
-        public E next() {
-            E current = queue.removeFirst();
-            for (Iterator<E> i = current.getChildren(); i.hasNext();) {
-                queue.add(i.next());
+        public BaseNode next() {
+            BaseNode current = queue.poll();
+            if (null != current) {
+                this.queue.addAll(current.getChildren());
+            } else {
+                throw new NoSuchElementException();
             }
             return current;
         }
@@ -100,21 +90,47 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
-    public static final Comparator<IBaseNode> NODE_NAME_COMPARATOR = new Comparator<IBaseNode>() {
-        public int compare(IBaseNode e1, IBaseNode e2) {
-            return e1.getNodeData().getName().compareTo(e2.getNodeData().getName());
+    private class DepthFirstSearchIterator implements Iterator<BaseNode> {
+        private final LinkedList<BaseNode> queue;
+
+        public DepthFirstSearchIterator(BaseNode start) {
+            if (null == start) {
+                throw new IllegalArgumentException("start is required");
+            }
+            this.queue = new LinkedList<>();
+
+            for (int i = start.getChildCount() - 1; 0 <= i; i--) {
+                queue.addFirst(start.getChildAt(i));
+            }
         }
-    };
+
+        public boolean hasNext() {
+            return !queue.isEmpty();
+        }
+
+        public BaseNode next() {
+            BaseNode current = queue.poll();
+            if (null != current) {
+                for (int i = current.getChildCount() - 1; 0 <= i; i--) {
+                    queue.addFirst(current.getChildAt(i));
+                }
+
+                return current;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
     public BaseNode() {
         parent = null;
         children = null;
-        ancestors = null;
-        ancestorCount = -1;
-        descendants = null;
-        descendantCount = -1;
         listenerList = null;
-        // need to set node id to keep track of acols in c@node formulas
+        // need to set node id to keep track of concepts in c@node formulas
         // synchronized to make counts unique within JVM and decrease the chance of creating the same id
         synchronized (BaseNode.class) {
             id = "n" + countNode + "_" + ((System.currentTimeMillis() / 1000) % (365 * 24 * 3600));
@@ -133,13 +149,15 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         this.name = name;
     }
 
-    public E getChildAt(int index) {
+    @JsonIgnore
+    public BaseNode getChildAt(int index) {
         if (children == null) {
             throw new ArrayIndexOutOfBoundsException("node has no children");
         }
         return children.get(index);
     }
 
+    @JsonIgnore
     public int getChildCount() {
         if (children == null) {
             return 0;
@@ -148,26 +166,27 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
-    public int getChildIndex(E child) {
+    @JsonIgnore
+    public int getChildIndex(BaseNode child) {
         if (null == child) {
             throw new IllegalArgumentException("argument is null");
         }
 
-        if (!isNodeChild(child)) {
+        if (!isChild(child)) {
             return -1;
         }
         return children.indexOf(child);
     }
 
-    public Iterator<E> getChildren() {
+    public Iterator<BaseNode> childrenIterator() {
         if (null == children) {
-            return Collections.<E>emptyList().iterator();
+            return Collections.<BaseNode>emptyList().iterator();
         } else {
             return children.iterator();
         }
     }
 
-    public List<E> getChildrenList() {
+    public List<BaseNode> getChildren() {
         if (null != children) {
             return Collections.unmodifiableList(children);
         } else {
@@ -175,30 +194,34 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
-    public E createChild() {
-        E child = (E) new BaseNode<E, I>();
+    public void setChildren(List<BaseNode> children) {
+        this.children = children;
+    }
+
+    public BaseNode createChild() {
+        BaseNode child = new BaseNode();
         addChild(child);
         return child;
     }
 
-    public E createChild(String name) {
-        E child = (E) new BaseNode<E, I>(name);
+    public BaseNode createChild(String name) {
+        BaseNode child = new BaseNode(name);
         addChild(child);
         return child;
     }
 
-    public void addChild(E child) {
+    public void addChild(BaseNode child) {
         addChild(getChildCount(), child);
     }
 
-    public void addChild(int index, E child) {
+    public void addChild(int index, BaseNode child) {
         if (null == child) {
             throw new IllegalArgumentException("new child is null");
-        } else if (isNodeAncestor(child)) {
+        } else if (isAncestor(child)) {
             throw new IllegalArgumentException("new child is an ancestor");
         }
 
-        IBaseNode oldParent = child.getParent();
+        BaseNode oldParent = child.getParent();
 
         if (null != oldParent) {
             oldParent.removeChild(child);
@@ -209,35 +232,36 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
             children = new ArrayList<>();
         }
         children.add(index, child);
-        fireTreeStructureChanged((E) this);
+        fireTreeStructureChanged(this);
     }
 
     public void removeChild(int index) {
-        E child = getChildAt(index);
+        BaseNode child = getChildAt(index);
         children.remove(index);
-        fireTreeStructureChanged((E) this);
+        fireTreeStructureChanged(this);
         child.setParent(null);
     }
 
-    public void removeChild(E child) {
+    public void removeChild(BaseNode child) {
         if (null == child) {
             throw new IllegalArgumentException("argument is null");
         }
 
-        if (isNodeChild(child)) {
+        if (isChild(child)) {
             removeChild(getChildIndex(child));
         }
     }
 
-    public E getParent() {
+    public BaseNode getParent() {
         return parent;
     }
 
-    public void setParent(E newParent) {
+    public void setParent(BaseNode newParent) {
         removeFromParent();
         parent = newParent;
     }
 
+    @JsonIgnore
     public boolean hasParent() {
         return null != parent;
     }
@@ -249,110 +273,34 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
+    @JsonIgnore
     public boolean isLeaf() {
         return 0 == getChildCount();
     }
 
-    public int getAncestorCount() {
-        if (-1 == ancestorCount) {
-            if (null == ancestors) {
-                ancestorCount = 0;
-                if (null != parent) {
-                    ancestorCount = parent.getAncestorCount() + 1;
-                }
-            } else {
-                ancestorCount = ancestors.size();
-            }
+    public int ancestorCount() {
+        int result = 0;
+        if (null != parent) {
+            result = parent.ancestorCount() + 1;
         }
-        return ancestorCount;
+        return result;
     }
 
-    public Iterator<E> getAncestors() {
-        return new Ancestors((E) this);
+    public Iterator<BaseNode> ancestorsIterator() {
+        return new AncestorsIterator(this);
     }
 
-    public List<E> getAncestorsList() {
-        if (null == ancestors) {
-            ancestors = new ArrayList<>(getAncestorCount());
-            if (null != parent) {
-                ancestors.add(parent);
-                ancestors.addAll(parent.getAncestorsList());
-            }
-        }
-        return Collections.unmodifiableList(ancestors);
-    }
-
-    public int getLevel() {
-        return getAncestorCount();
-    }
-
-    public int getDescendantCount() {
-        if (-1 == descendantCount) {
-            if (null == descendants) {
-                descendantCount = 0;
-                for (Iterator<E> i = getDescendants(); i.hasNext();) {
-                    i.next();
-                    descendantCount++;
-                }
-            } else {
-                descendantCount = descendants.size();
-            }
+    public int descendantCount() {
+        int descendantCount = 0;
+        for (Iterator<BaseNode> i = descendantsIterator(); i.hasNext(); ) {
+            i.next();
+            descendantCount++;
         }
         return descendantCount;
     }
 
-    public Iterator<E> getDescendants() {
-        return new BreadthFirstSearch((E) this);
-    }
-
-    public List<E> getDescendantsList() {
-        if (null == descendants) {
-            descendants = new ArrayList<>(getChildCount());
-            if (null != children) {
-                descendants.addAll(children);
-                for (IBaseNode child : children) {
-                    descendants.addAll(child.getDescendantsList());
-                }
-                descendants.trimToSize();
-            }
-        }
-        return Collections.unmodifiableList(descendants);
-    }
-
-    public Iterator<E> getSubtree() {
-        return new StartIterator<>((E) this, getDescendants());
-    }
-
-    public I getNodeData() {
-        return (I) this;
-    }
-
-    private boolean isNodeAncestor(E anotherNode) {
-        if (null == anotherNode) {
-            return false;
-        }
-
-        E ancestor = (E) this;
-
-        do {
-            if (ancestor == anotherNode) {
-                return true;
-            }
-        } while ((ancestor = (E) ancestor.getParent()) != null);
-
-        return false;
-    }
-
-    private boolean isNodeChild(E node) {
-        if (null == node) {
-            return false;
-        } else {
-            if (getChildCount() == 0) {
-                return false;
-            } else {
-                return (node.getParent() == this && -1 < children.indexOf(node));
-            }
-        }
+    public Iterator<BaseNode> descendantsIterator() {
+        return new DepthFirstSearchIterator(this);
     }
 
     public String getName() {
@@ -379,25 +327,26 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         userObject = object;
     }
 
+    @Override
     public String toString() {
         return name;
     }
 
-    public void addTreeStructureChangedListener(IBaseTreeStructureChangedListener<E> l) {
+    public void addTreeStructureChangedListener(IBaseTreeStructureChangedListener<BaseNode> l) {
         if (null == listenerList) {
             listenerList = new ArrayList<>();
         }
         listenerList.add(l);
     }
 
-    public void removeTreeStructureChangedListener(IBaseTreeStructureChangedListener<E> l) {
+    public void removeTreeStructureChangedListener(IBaseTreeStructureChangedListener<BaseNode> l) {
         if (null != listenerList) {
             listenerList.remove(l);
         }
     }
 
-    public void fireTreeStructureChanged(E node) {
-        descendants = null;
+    @SuppressWarnings({"unchecked"})
+    public void fireTreeStructureChanged(BaseNode node) {
         if (null != listenerList) {
             // Guaranteed to return a non-null array
             Object[] listeners = listenerList.toArray();
@@ -406,7 +355,7 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
             for (int i = listeners.length - 2; i >= 0; i -= 2) {
                 if (listeners[i + 1] instanceof IBaseTreeStructureChangedListener) {
                     // Lazily create the event:
-                    ((IBaseTreeStructureChangedListener<E>) listeners[i + 1]).treeStructureChanged(node);
+                    ((IBaseTreeStructureChangedListener<BaseNode>) listeners[i + 1]).treeStructureChanged(node);
                 }
             }
         }
@@ -415,14 +364,23 @@ public class BaseNode<E extends IBaseNode, I extends IBaseNodeData> extends Inde
         }
     }
 
-    public void trim() {
-        if (null != children) {
-            children.trimToSize();
-            for (IBaseNode child : children) {
-                if (child instanceof BaseNode) {
-                    ((BaseNode) child).trim();
-                }
-            }
+    private boolean isAncestor(BaseNode node) {
+        if (null == node) {
+            return false;
         }
+
+        BaseNode ancestor = this;
+
+        do {
+            if (ancestor == node) {
+                return true;
+            }
+        } while ((ancestor = ancestor.getParent()) != null);
+
+        return false;
+    }
+
+    private boolean isChild(BaseNode node) {
+        return null != node && 0 != getChildCount() && node.getParent() == this && -1 < children.indexOf(node);
     }
 }

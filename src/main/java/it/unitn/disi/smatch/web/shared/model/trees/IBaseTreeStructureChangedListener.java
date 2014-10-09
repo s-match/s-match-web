@@ -7,7 +7,7 @@ import java.util.EventListener;
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public interface IBaseTreeStructureChangedListener<E extends IBaseNode> extends EventListener {
+public interface IBaseTreeStructureChangedListener<E extends BaseNode> extends EventListener {
 
     /**
      * Receives the signal that the structure of the <code>node</code> has been changed. That is, a child node has been

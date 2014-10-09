@@ -5,7 +5,7 @@ package it.unitn.disi.smatch.web.shared.model.mappings;
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public interface IMappingElement<T> {
+public interface IMappingElement {
 
     // relations abbreviations
     char EQUIVALENCE = '=';
@@ -19,10 +19,4 @@ public interface IMappingElement<T> {
     char ENTAILED_DISJOINT = 'X';
 
     char IDK = '?';
-
-    T getSource();
-
-    T getTarget();
-
-    char getRelation();
 }

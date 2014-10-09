@@ -52,17 +52,19 @@
 
 <table align="center">
     <tr>
-        <td colspan="2" style="font-weight:bold;">Please enter your name:</td>
+        <td colspan="2" style="font-weight:bold;">Please enter your task id:</td>
     </tr>
     <tr>
-        <td id="nameFieldContainer"></td>
+        <td id="taskFieldContainer"></td>
         <td id="sendButtonContainer"></td>
     </tr>
     <tr>
         <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
     </tr>
+    <tr>
+        <td id="sendTaskButtonContainer"></td>
+    </tr>
 </table>
-<%--TODO AA include analytics--%>
-<%--<%@ include file="include/analytics.jsp" %>--%>
+<%@ include file="include/analytics.jsp" %>
 </body>
 </html>

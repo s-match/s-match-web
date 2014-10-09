@@ -5,7 +5,7 @@ package it.unitn.disi.smatch.web.shared.model;
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public class IndexedObject implements IIndexedObject {
+public class IndexedObject {
 
     protected int index;
 

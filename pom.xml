@@ -27,17 +27,26 @@
 
     <properties>
         <!-- Convenience property to set the GWT version -->
-        <gwtVersion>2.6.0</gwtVersion>
+        <gwtVersion>2.6.1</gwtVersion>
         <!-- GWT needs at least java 1.6 -->
         <!-- 1.7 for spring -->
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-
-        <spring.version>3.2.8.RELEASE</spring.version>
-        <spring.security.version>3.2.1.RELEASE</spring.security.version>
-        <jackson.version>2.3.0</jackson.version>
+        <spring.security.version>3.2.5.RELEASE</spring.security.version>
         <junit.version>4.11</junit.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>${spring.security.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -104,61 +113,58 @@
         </dependency>
 
         <dependency>
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl-data-wn31</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.nmorel.gwtjackson</groupId>
             <artifactId>gwt-jackson</artifactId>
-            <version>0.4.0</version>
+            <version>0.6.2</version>
         </dependency>
 
         <!-- spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <!-- spring security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
-
 
         <!-- jackson JSON dependencies -->
         <dependency>
@@ -201,7 +207,7 @@
     </dependencies>
 
     <build>
-        <!-- Generate compiled stuff in the folder used for developing mode -->
+        <!-- Generate compiled stuff in the folder used for development mode -->
         <outputDirectory>target/www/WEB-INF/classes</outputDirectory>
 
         <plugins>
@@ -316,4 +322,86 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>javadoc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <doclet>org.entitypedia.games.sdoclet.SpringMVCDoclet</doclet>
+                            <docletArtifact>
+                                <groupId>org.entitypedia.games</groupId>
+                                <artifactId>sdoclet</artifactId>
+                                <version>1.0.1</version>
+                            </docletArtifact>
+                            <!-- For the project-reports page-->
+                            <name>Swagger Spring MVC Doclet</name>
+                            <description>Swagger documentation.</description>
+                            <outputDirectory>${project.build.directory}/${project.build.finalName}/apidocs/</outputDirectory>
+                            <reportOutputDirectory>${project.build.directory}/${project.build.finalName}/apidocs/</reportOutputDirectory>
+                            <show>private</show>
+                            <charset>${project.build.sourceEncoding}</charset>
+                            <includeDependencySources>true</includeDependencySources>
+                            <includeTransitiveDependencySources>true</includeTransitiveDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>it.unitn.disi.smatch:*</dependencySourceInclude>
+                            </dependencySourceIncludes>
+                            <subpackages>it.unitn.disi.smatch</subpackages>
+                            <verbose>false</verbose>
+                            <debug>false</debug>
+
+                            <additionalparam>
+                                -apiBasePath /webapi/
+                                -docBasePath /apidocs/
+                                -apiVersion ${project.version}
+                                -apiPackage it.unitn.disi.smatch.web.shared.api
+                                -controllerPackage it.unitn.disi.smatch.web.server.api.controllers
+                            </additionalparam>
+                            <useStandardDocletOptions>false</useStandardDocletOptions>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-war</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>exploded</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-war</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>war</goal>
+                                </goals>
+                                <configuration>
+                                    <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+                                    <packagingExcludes>resources/test/**,WEB-INF/classes/builddef.lst</packagingExcludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

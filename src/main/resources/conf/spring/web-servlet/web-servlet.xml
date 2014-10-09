@@ -18,6 +18,8 @@
     <context:component-scan base-package="it.unitn.disi.smatch.web.server.web"/>
     <mvc:annotation-driven/>
     <mvc:default-servlet-handler/>
+    <mvc:resources mapping="/apidocs/**" location="/apidocs/"/>
+    <mvc:resources mapping="/favicon.ico" location="/favicon.ico"/>
 
     <!-- define bean to resolve view -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

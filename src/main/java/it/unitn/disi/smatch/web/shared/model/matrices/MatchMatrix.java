@@ -1,5 +1,7 @@
 package it.unitn.disi.smatch.web.shared.model.matrices;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.unitn.disi.smatch.data.mappings.IMappingElement;
 
 import java.util.Arrays;
@@ -10,27 +12,49 @@ import java.util.Arrays;
  * @author Mikalai Yatskevich mikalai.yatskevich@comlab.ox.ac.uk
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public class MatchMatrix implements IMatchMatrix {
+public class MatchMatrix {
 
-    private int x = 0;
-    private int y = 0;
-    private char[][] matrix = null;
+    private final int x;
+    private final int y;
+    private final char[][] matrix;
 
-    public void init(int x, int y) {
-        matrix = new char[x][y];
+    /**
+     * Factory constructor.
+     */
+    public MatchMatrix() {
+        this.x = 0;
+        this.y = 0;
+        this.matrix = null;
+    }
+
+    /**
+     * Matrix instance constructor.
+     *
+     * @param x row count
+     * @param y column count
+     */
+    @JsonCreator
+    public MatchMatrix(@JsonProperty final int x, @JsonProperty final int y) {
         this.x = x;
         this.y = y;
-
+        this.matrix = new char[x][y];
         for (char[] row : matrix) {
             Arrays.fill(row, IMappingElement.IDK);
         }
     }
 
-    public char get(int x, int y) {
+    @JsonCreator
+    public MatchMatrix(@JsonProperty final int x, @JsonProperty final int y, @JsonProperty char[][] matrix) {
+        this.x = x;
+        this.y = y;
+        this.matrix = matrix;
+    }
+
+    public char get(final int x, final int y) {
         return matrix[x][y];
     }
 
-    public boolean set(int x, int y, final char value) {
+    public boolean set(final int x, final int y, final char value) {
         boolean result = value == matrix[x][y];
         matrix[x][y] = value;
         return result;
@@ -42,5 +66,9 @@ public class MatchMatrix implements IMatchMatrix {
 
     public int getY() {
         return y;
+    }
+
+    public char[][] getMatrix() {
+        return matrix;
     }
 }

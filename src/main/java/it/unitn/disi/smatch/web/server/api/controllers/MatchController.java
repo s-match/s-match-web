@@ -1,17 +1,16 @@
 package it.unitn.disi.smatch.web.server.api.controllers;
 
-import it.unitn.disi.smatch.SMatchException;
-import it.unitn.disi.smatch.data.mappings.IContextMapping;
-import it.unitn.disi.smatch.data.trees.INode;
-import it.unitn.disi.smatch.web.server.api.IMatchAPI;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.unitn.disi.smatch.web.shared.api.IMatchAPI;
 import it.unitn.disi.smatch.web.server.api.service.IMatchService;
+import it.unitn.disi.smatch.web.shared.model.exceptions.SMatchWebException;
+import it.unitn.disi.smatch.web.shared.model.tasks.MatchingTask;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -26,16 +25,22 @@ public class MatchController implements IMatchAPI {
 
     @Override
     @ResponseBody
-    @RequestMapping(value = IMatchAPI.MATCH, method = RequestMethod.POST)
-    public IContextMapping<INode> match(@RequestBody BaseContextPair contexts) throws SMatchException {
-        return matchService.match(contexts);
+    @RequestMapping(value = IMatchAPI.MATCH, method = RequestMethod.POST, produces = {"text/plain"})
+    public String match(@RequestBody BaseContextPair contexts, @PathVariable String mode) throws SMatchWebException {
+        return matchService.match(contexts, mode);
     }
 
-    // TODO AA remove demo method
+    @Override
     @ResponseBody
-    @RequestMapping(value = "ctx", method = RequestMethod.GET)
-    public String ctx() throws IOException {
-        return "test";
+    @RequestMapping(value = IMatchAPI.TASK_READ, method = RequestMethod.GET)
+    public MatchingTask readTask(@PathVariable String taskID) throws SMatchWebException {
+        return matchService.readTask(taskID);
     }
 
+    @Override
+    @ResponseBody
+    @RequestMapping(value = IMatchAPI.DEMO_CONTEXTS, method = RequestMethod.GET)
+    public BaseContextPair demoContextPair() {
+        return matchService.demoContextPair();
+    }
 }

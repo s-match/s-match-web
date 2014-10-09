@@ -1,33 +1,42 @@
 package it.unitn.disi.smatch.web.shared.model.mappings;
 
-import it.unitn.disi.smatch.web.shared.model.IIndexedObject;
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseContext;
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseNode;
+import it.unitn.disi.smatch.web.shared.model.IndexedObject;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
+
+import java.util.Iterator;
 
 /**
  * Mapping between context nodes based on a matrix.
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public class NodesMatrixMapping extends MatrixMapping<IBaseNode> {
+public class NodesMatrixMapping extends MatrixMapping {
 
-    public NodesMatrixMapping(IBaseContext<IBaseNode> source, IBaseContext<IBaseNode> target) {
+    public NodesMatrixMapping(BaseContext source, BaseContext target) {
         super(source, target);
     }
 
     @Override
-    protected int getRowCount(IBaseContext<IBaseNode> c) {
-        return getNodeCount(c);
+    protected int indexSource(BaseContext c) {
+        return indexContext(c);
     }
 
     @Override
-    protected int getColCount(IBaseContext<IBaseNode> c) {
-        return getNodeCount(c);
+    protected int indexTarget(BaseContext c) {
+        return indexContext(c);
     }
 
-    private int getNodeCount(IBaseContext<IBaseNode> c) {
+    /**
+     * Indexes and counts nodes in the context
+     *
+     * @param c context
+     * @return node count
+     */
+    public static int indexContext(BaseContext c) {
         int result = 0;
-        for (IBaseNode node : c.getNodesList()) {
+        for (Iterator<BaseNode> i = c.nodeIterator(); i.hasNext(); ) {
+            BaseNode node = i.next();
             node.setIndex(result);
             result++;
         }
@@ -35,17 +44,18 @@ public class NodesMatrixMapping extends MatrixMapping<IBaseNode> {
     }
 
     @Override
-    protected void initCols(IBaseContext<IBaseNode> targetContext, IIndexedObject[] targets) {
+    protected void initCols(BaseContext targetContext, IndexedObject[] targets) {
         initNodes(targetContext, targets);
     }
 
     @Override
-    protected void initRows(IBaseContext<IBaseNode> sourceContext, IIndexedObject[] sources) {
+    protected void initRows(BaseContext sourceContext, IndexedObject[] sources) {
         initNodes(sourceContext, sources);
     }
 
-    private void initNodes(IBaseContext<IBaseNode> c, IIndexedObject[] o) {
-        for (IBaseNode node : c.getNodesList()) {
+    private void initNodes(BaseContext c, IndexedObject[] o) {
+        for (Iterator<BaseNode> i = c.nodeIterator(); i.hasNext(); ) {
+            BaseNode node = i.next();
             o[node.getIndex()] = node;
         }
     }

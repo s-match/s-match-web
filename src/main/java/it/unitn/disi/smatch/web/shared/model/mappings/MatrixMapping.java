@@ -1,37 +1,40 @@
 package it.unitn.disi.smatch.web.shared.model.mappings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import it.unitn.disi.smatch.web.shared.model.IIndexedObject;
-import it.unitn.disi.smatch.web.shared.model.matrices.IMatchMatrix;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.unitn.disi.smatch.web.shared.model.IndexedObject;
 import it.unitn.disi.smatch.web.shared.model.matrices.MatchMatrix;
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseContext;
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseNode;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
 
 import java.util.*;
 
 /**
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> implements IContextMapping<T>, IMappingFactory {
+public class MatrixMapping extends BaseMapping {
 
-    protected final IMatchMatrix matrix;
+    protected final MatchMatrix matrix;
 
     // for set size();
     private int elementCount;
 
-    private T[] sources;
-    private T[] targets;
+    @JsonIgnore
+    private BaseNode[] sources;
+    @JsonIgnore
+    private BaseNode[] targets;
 
     @JsonIgnore
     private volatile transient int modCount;
 
-    private final class MatrixMappingIterator implements Iterator<IMappingElement<T>> {
+    private final class MatrixMappingIterator implements Iterator<MappingElement> {
 
         private int expectedModCount;
         private int curRow;
         private int curCol;
-        private IMappingElement<T> next;
-        private IMappingElement<T> current;
+        private MappingElement next;
+        private MappingElement current;
 
         private MatrixMappingIterator() {
             this.expectedModCount = modCount;
@@ -48,7 +51,7 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
             return null != next;
         }
 
-        public IMappingElement<T> next() {
+        public MappingElement next() {
             if (modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
             }
@@ -68,13 +71,13 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
             if (modCount != expectedModCount) {
                 throw new ConcurrentModificationException();
             }
-            setRelation(current.getSource(), current.getTarget(), IMappingElement.IDK);
+            setRelation(current.getSource().getIndex(), current.getTarget().getIndex(), IMappingElement.IDK);
             expectedModCount = modCount;
             current = null;
         }
 
-        private IMappingElement<T> findNext() {
-            IMappingElement<T> result = null;
+        private MappingElement findNext() {
+            MappingElement result = null;
             char relation = IMappingElement.IDK;
             do {
                 curCol++;
@@ -86,119 +89,134 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
             while (curRow < matrix.getX() && curCol < matrix.getY() && IMappingElement.IDK == (relation = matrix.get(curRow, curCol)));
 
             if (IMappingElement.IDK != relation) {
-                result = new MappingElement<>(sources[curRow], targets[curCol], relation);
+                result = new MappingElement(sources[curRow], targets[curCol], relation);
             }
             return result;
         }
     }
 
     public MatrixMapping() {
-        matrix = new MatchMatrix();
+        this.matrix = new MatchMatrix();
     }
 
-    @SuppressWarnings("unchecked")
-    public MatrixMapping(IBaseContext<IBaseNode> sourceContext, IBaseContext<IBaseNode> targetContext) {
-        this();
-        this.sourceContext = sourceContext;
-        this.targetContext = targetContext;
-        // counts and indexes them
-        int rows = getRowCount(sourceContext);
-        int cols = getColCount(targetContext);
-        matrix.init(rows, cols);
+    @JsonCreator
+    public MatrixMapping(@JsonProperty BaseContext sourceContext, @JsonProperty BaseContext targetContext) {
+        super(sourceContext, targetContext);
 
-        sources = (T[]) new IIndexedObject[rows];
-        targets = (T[]) new IIndexedObject[cols];
+        // counts and indexes them
+        int rows = indexSource(sourceContext);
+        int cols = indexTarget(targetContext);
+        this.matrix = new MatchMatrix(rows, cols);
+
+        this.sources = new BaseNode[rows];
+        this.targets = new BaseNode[cols];
 
         initRows(sourceContext, sources);
         initCols(targetContext, targets);
 
-        elementCount = 0;
-        modCount = 0;
+        this.elementCount = 0;
+        this.modCount = 0;
     }
 
-    protected void initCols(IBaseContext<IBaseNode> targetContext, IIndexedObject[] targets) {
+    @JsonCreator
+    public MatrixMapping(@JsonProperty BaseContext sourceContext, @JsonProperty BaseContext targetContext, @JsonProperty MatchMatrix matrix) {
+        super(sourceContext, targetContext);
+
+        // counts and indexes them
+        int rows = indexSource(sourceContext);
+        int cols = indexTarget(targetContext);
+        this.matrix = matrix;
+
+        this.sources = new BaseNode[rows];
+        this.targets = new BaseNode[cols];
+
+        initRows(sourceContext, sources);
+        initCols(targetContext, targets);
+
+        this.elementCount = 0;
+        this.modCount = 0;
+    }
+
+    public MatchMatrix getMatrix() {
+        return matrix;
+    }
+
+    protected void initCols(BaseContext targetContext, IndexedObject[] targets) {
         // void
     }
 
-    protected void initRows(IBaseContext<IBaseNode> sourceContext, IIndexedObject[] sources) {
+    protected void initRows(BaseContext sourceContext, IndexedObject[] sources) {
         // void
     }
 
-    public char getRelation(T source, T target) {
+    public char getRelation(IndexedObject source, IndexedObject target) {
         return matrix.get(source.getIndex(), target.getIndex());
     }
 
-    public boolean setRelation(final T source, final T target, final char relation) {
-        final boolean result =
-                source == sources[source.getIndex()] &&
-                        target == targets[target.getIndex()] &&
-                        relation == matrix.get(source.getIndex(), target.getIndex());
+    public boolean setRelation(final int source, final int target, final char relation) {
+        final boolean result = relation == matrix.get(source, target);
 
         if (!result) {
-            if (source == sources[source.getIndex()] && target == targets[target.getIndex()]) {
-                modCount++;
-                matrix.set(source.getIndex(), target.getIndex(), relation);
-                if (IMappingElement.IDK == relation) {
-                    elementCount--;
-                } else {
-                    elementCount++;
-                }
+            modCount++;
+            matrix.set(source, target, relation);
+            if (IMappingElement.IDK == relation) {
+                elementCount--;
+            } else {
+                elementCount++;
             }
         }
 
         return !result;
     }
 
-    public List<IMappingElement<T>> getSources(final T source) {
+    public Set<MappingElement> getSources(final BaseNode source) {
         final int sIdx = source.getIndex();
+        Set<MappingElement> result = Collections.emptySet();
         if (0 <= sIdx && sIdx < sources.length && (source == sources[sIdx])) {
-            ArrayList<IMappingElement<T>> result = new ArrayList<>();
+            result = new HashSet<>();
             for (int j = 0; j < targets.length; j++) {
                 char rel = matrix.get(sIdx, j);
                 if (IMappingElement.IDK != rel) {
-                    result.add(new MappingElement<>(sources[sIdx], targets[j], rel));
+                    result.add(new MappingElement(sources[sIdx], targets[j], rel));
                 }
             }
-            return result;
-        } else {
-            return Collections.emptyList();
+
         }
+        return result;
     }
 
-    public List<IMappingElement<T>> getTargets(T target) {
+    public Set<MappingElement> getTargets(BaseNode target) {
         final int tIdx = target.getIndex();
+        Set<MappingElement> result = Collections.emptySet();
         if (0 <= tIdx && tIdx < targets.length && (target == targets[tIdx])) {
-            ArrayList<IMappingElement<T>> result = new ArrayList<>();
+            result = new HashSet<>();
             for (int i = 0; i < sources.length; i++) {
                 char rel = matrix.get(i, tIdx);
                 if (IMappingElement.IDK != rel) {
-                    result.add(new MappingElement<>(sources[i], targets[tIdx], rel));
+                    result.add(new MappingElement(sources[i], targets[tIdx], rel));
                 }
             }
-            return result;
-        } else {
-            return Collections.emptyList();
         }
+        return result;
     }
 
     public int size() {
         return elementCount;
     }
 
+    @JsonIgnore
     public boolean isEmpty() {
         return 0 == elementCount;
     }
 
     public boolean contains(Object o) {
         boolean result = false;
-        if (o instanceof IMappingElement) {
-            final IMappingElement e = (IMappingElement) o;
-            if (e.getSource() instanceof IIndexedObject) {
-                @SuppressWarnings("unchecked")
-                final T s = (T) e.getSource();
-                if (e.getTarget() instanceof IIndexedObject) {
-                    @SuppressWarnings("unchecked")
-                    final T t = (T) e.getTarget();
+        if (o instanceof MappingElement) {
+            final MappingElement e = (MappingElement) o;
+            if (e.getSource() != null) {
+                final IndexedObject s = e.getSource();
+                if (e.getTarget() != null) {
+                    final IndexedObject t = e.getTarget();
                     result = IMappingElement.IDK != getRelation(s, t) && s == sources[s.getIndex()] && t == targets[t.getIndex()];
                 }
             }
@@ -206,25 +224,23 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
         return result;
     }
 
-    public Iterator<IMappingElement<T>> iterator() {
+    public Iterator<MappingElement> iterator() {
         return new MatrixMappingIterator();
     }
 
-    public boolean add(IMappingElement<T> e) {
-        return setRelation(e.getSource(), e.getTarget(), e.getRelation());
+    public boolean add(MappingElement e) {
+        return setRelation(e.getSource().getIndex(), e.getTarget().getIndex(), e.getRelation());
     }
 
     public boolean remove(Object o) {
         boolean result = false;
-        if (o instanceof IMappingElement) {
-            IMappingElement e = (IMappingElement) o;
-            if (e.getSource() instanceof IIndexedObject) {
-                @SuppressWarnings("unchecked")
-                T s = (T) e.getSource();
-                if (e.getTarget() instanceof IIndexedObject) {
-                    @SuppressWarnings("unchecked")
-                    T t = (T) e.getTarget();
-                    result = setRelation(s, t, IMappingElement.IDK);
+        if (o instanceof MappingElement) {
+            MappingElement e = (MappingElement) o;
+            if (e.getSource() != null) {
+                final IndexedObject s = e.getSource();
+                if (e.getTarget() != null) {
+                    final IndexedObject t = e.getTarget();
+                    result = setRelation(s.getIndex(), t.getIndex(), IMappingElement.IDK);
                 }
             }
         }
@@ -233,22 +249,14 @@ public class MatrixMapping<T extends IIndexedObject> extends BaseMapping<T> impl
     }
 
     public void clear() {
-        final int rows = matrix.getX();
-        final int cols = matrix.getY();
-        matrix.init(rows, cols);
-
-        elementCount = 0;
+        throw new UnsupportedOperationException();
     }
 
-    public IContextMapping<IBaseNode> getContextMappingInstance(IBaseContext<IBaseNode> source, IBaseContext<IBaseNode> target) {
-        return new NodesMatrixMapping(source, target);
-    }
-
-    protected int getColCount(IBaseContext<IBaseNode> c) {
+    protected int indexTarget(BaseContext c) {
         return -1;
     }
 
-    protected int getRowCount(IBaseContext<IBaseNode> c) {
+    protected int indexSource(BaseContext c) {
         return -1;
     }
 }

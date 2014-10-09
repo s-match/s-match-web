@@ -24,6 +24,7 @@
         <constructor-arg>
             <list>
                 <security:filter-chain pattern="/favicon.ico" filters=""/>
+                <security:filter-chain pattern="/apidocs/**" filters=""/>
                 <security:filter-chain pattern="/**" filters="anonymousAuthFilter"/>
             </list>
         </constructor-arg>

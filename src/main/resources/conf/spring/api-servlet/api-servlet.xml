@@ -61,6 +61,7 @@
                                value="status=501, msg=error.UnsupportedOperationException, emsg=error.UnsupportedOperationException.explanation, wmsg=error.UnsupportedOperationException.whattodo"/>
 
                         <entry key="DISIException" value="status=500, msg=_exmsg"/>
+                        <entry key="SMatchWebException" value="msg=_exmsg"/>
                         <entry key="IllegalArgumentException" value="status=400, msg=_exmsg"/>
                         <entry key="IllegalStateException" value="status=500, msg=_exmsg"/>
                         <entry key="InvalidStateException" value="status=500, msg=_exmsg"/>

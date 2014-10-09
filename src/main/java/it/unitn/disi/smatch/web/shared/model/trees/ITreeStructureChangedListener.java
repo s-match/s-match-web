@@ -5,5 +5,5 @@ package it.unitn.disi.smatch.web.shared.model.trees;
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public interface ITreeStructureChangedListener extends IBaseTreeStructureChangedListener<IBaseNode> {
+public interface ITreeStructureChangedListener extends IBaseTreeStructureChangedListener<BaseNode> {
 }

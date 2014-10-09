@@ -1,27 +1,29 @@
 package it.unitn.disi.smatch.web.shared.model.mappings;
 
+import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
+
 /**
  * Mapping element implementation.
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public class MappingElement<T> implements IMappingElement<T> {
+public class MappingElement {
 
-    protected final T source;
-    protected final T target;
-    protected final char relation;
+    protected BaseNode source;
+    protected BaseNode target;
+    protected char relation;
 
-    public MappingElement(T source, T target, char relation) {
+    public MappingElement(BaseNode source, BaseNode target, char relation) {
         this.source = source;
         this.target = target;
         this.relation = relation;
     }
 
-    public T getSource() {
+    public BaseNode getSource() {
         return source;
     }
 
-    public T getTarget() {
+    public BaseNode getTarget() {
         return target;
     }
 
@@ -29,6 +31,7 @@ public class MappingElement<T> implements IMappingElement<T> {
         return relation;
     }
 
+    @Override
     public int hashCode() {
         int result;
         result = (source != null ? source.hashCode() : 0);
@@ -37,6 +40,7 @@ public class MappingElement<T> implements IMappingElement<T> {
         return result;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -48,8 +52,7 @@ public class MappingElement<T> implements IMappingElement<T> {
             return false;
         }
 
-        @SuppressWarnings("unchecked")
-        MappingElement<T> that = (MappingElement<T>) o;
+        MappingElement that = (MappingElement) o;
 
         if (relation != that.relation) {
             return false;

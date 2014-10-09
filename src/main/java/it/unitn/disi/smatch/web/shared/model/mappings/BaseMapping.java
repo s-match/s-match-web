@@ -1,20 +1,27 @@
 package it.unitn.disi.smatch.web.shared.model.mappings;
 
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseContext;
-import it.unitn.disi.smatch.web.shared.model.trees.IBaseNode;
-
-import java.util.AbstractSet;
+import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
 
 /**
  * Base mapping class.
  *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public abstract class BaseMapping<T> extends AbstractSet<IMappingElement<T>> implements IContextMapping<T> {
+public abstract class BaseMapping {
 
     protected double similarity;
-    protected IBaseContext<IBaseNode> sourceContext;
-    protected IBaseContext<IBaseNode> targetContext;
+    protected final BaseContext sourceContext;
+    protected final BaseContext targetContext;
+
+    protected BaseMapping() {
+        this.sourceContext = null;
+        this.targetContext = null;
+    }
+
+    protected BaseMapping(final BaseContext sourceContext, final BaseContext targetContext) {
+        this.sourceContext = sourceContext;
+        this.targetContext = targetContext;
+    }
 
     public double getSimilarity() {
         return similarity;
@@ -24,11 +31,11 @@ public abstract class BaseMapping<T> extends AbstractSet<IMappingElement<T>> imp
         this.similarity = similarity;
     }
 
-    public IBaseContext<IBaseNode> getSourceContext() {
+    public BaseContext getSourceContext() {
         return sourceContext;
     }
 
-    public IBaseContext<IBaseNode> getTargetContext() {
+    public BaseContext getTargetContext() {
         return targetContext;
     }
 }

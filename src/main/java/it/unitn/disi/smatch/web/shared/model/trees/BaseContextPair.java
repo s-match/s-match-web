@@ -1,28 +1,35 @@
 package it.unitn.disi.smatch.web.shared.model.trees;
 
 /**
+ * A pair of contexts for matching.
+ *
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
  */
-public class BaseContextPair<E extends IBaseNode> {
+public class BaseContextPair {
 
-    // TODO AA find a way to share code with S-Match data packages
+    /**
+     * Source (left) context.
+     */
+    private BaseContext sourceContext;
 
-    private IBaseContext<E> sourceContext;
-    private IBaseContext<E> targetContext;
+    /**
+     * Target (right) context.
+     */
+    private BaseContext targetContext;
 
-    public IBaseContext<E> getSourceContext() {
+    public BaseContext getSourceContext() {
         return sourceContext;
     }
 
-    public void setSourceContext(IBaseContext<E> sourceContext) {
+    public void setSourceContext(BaseContext sourceContext) {
         this.sourceContext = sourceContext;
     }
 
-    public IBaseContext<E> getTargetContext() {
+    public BaseContext getTargetContext() {
         return targetContext;
     }
 
-    public void setTargetContext(IBaseContext<E> targetContext) {
+    public void setTargetContext(BaseContext targetContext) {
         this.targetContext = targetContext;
     }
 }

@@ -42,7 +42,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
         apiContext.setServletContext(container);
         apiContext.setDisplayName("API Context");
         apiContext.setParent(rootContext);
-        apiContext.setConfigLocation("classpath:conf/spring/api-servlet/api-servlet.xml");
+        apiContext.setConfigLocations("classpath:conf/spring/api-servlet/api-servlet.xml", "classpath:conf/s-match/s-match.xml");
         Servlet apiServlet = new DispatcherServlet(apiContext);
         ServletRegistration.Dynamic api = container.addServlet("api", apiServlet);
         api.addMapping("/webapi/*");
