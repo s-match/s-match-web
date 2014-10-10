@@ -1,11 +1,13 @@
 package it.unitn.disi.smatch.web.client;
 
+import com.github.nmorel.gwtjackson.client.ObjectMapper;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.*;
 import it.unitn.disi.smatch.web.shared.FieldVerifier;
+import it.unitn.disi.smatch.web.shared.model.tasks.MatchingTask;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
@@ -15,8 +17,8 @@ import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
  */
 public class SMatchWeb implements EntryPoint {
 
-    // disabled as jackson-gwt breaks on it
-    // public static interface BaseContextPairMapper extends ObjectMapper<BaseContextPair> {}
+    public static interface BaseContextPairMapper extends ObjectMapper<BaseContextPair> {}
+    public static interface MatchingTaskMapper extends ObjectMapper<MatchingTask> {}
 
     /**
      * The message displayed to the user when the server cannot be reached or
@@ -30,13 +32,13 @@ public class SMatchWeb implements EntryPoint {
      * This is the entry point method.
      */
     public void onModuleLoad() {
-        final Button sendButton = new Button("Send");
+        final Button getTaskButton = new Button("Get Task");
         final TextBox taskField = new TextBox();
         taskField.setText("Task ID");
         final Label errorLabel = new Label();
 
         // We can add style names to widgets
-        sendButton.addStyleName("sendButton");
+        getTaskButton.addStyleName("sendButton");
 
         final Button sendTaskButton = new Button("Send Task");
         sendTaskButton.addStyleName("sendButton");
@@ -44,7 +46,7 @@ public class SMatchWeb implements EntryPoint {
         // Add the taskField and sendButton to the RootPanel
         // Use RootPanel.get() to get the entire body element
         RootPanel.get("taskFieldContainer").add(taskField);
-        RootPanel.get("sendButtonContainer").add(sendButton);
+        RootPanel.get("sendButtonContainer").add(getTaskButton);
         RootPanel.get("errorLabelContainer").add(errorLabel);
 
         RootPanel.get("sendTaskButtonContainer").add(sendTaskButton);
@@ -79,19 +81,19 @@ public class SMatchWeb implements EntryPoint {
         closeButton.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 dialogBox.hide();
-                sendButton.setEnabled(true);
-                sendButton.setFocus(true);
+                getTaskButton.setEnabled(true);
+                getTaskButton.setFocus(true);
                 sendTaskButton.setEnabled(true);
             }
         });
 
         // Create a handler for the sendButton and taskField
-        class SendHandler implements ClickHandler, KeyUpHandler {
+        class GetTaskHandler implements ClickHandler, KeyUpHandler {
             /**
              * Fired when the user clicks on the sendButton.
              */
             public void onClick(ClickEvent event) {
-                sendTaskToServer();
+                readTaskFromServer();
             }
 
             /**
@@ -99,14 +101,14 @@ public class SMatchWeb implements EntryPoint {
              */
             public void onKeyUp(KeyUpEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                    sendTaskToServer();
+                    readTaskFromServer();
                 }
             }
 
             /**
              * Send the name from the taskField to the server and wait for a response.
              */
-            private void sendTaskToServer() {
+            private void readTaskFromServer() {
                 // First, we validate the input.
                 errorLabel.setText("");
                 String textToServer = taskField.getText();
@@ -116,7 +118,7 @@ public class SMatchWeb implements EntryPoint {
                 }
 
                 // Then, we send the input to the server.
-                sendButton.setEnabled(false);
+                getTaskButton.setEnabled(false);
                 textToServerLabel.setText(textToServer);
                 serverResponseLabel.setText("");
 
@@ -144,7 +146,10 @@ public class SMatchWeb implements EntryPoint {
                                 dialogBox.setText("Remote Procedure Call");
                                 serverResponseLabel.removeStyleName("serverResponseLabelError");
                                 serverResponseLabel.setHTML(response.getStatusCode() + " " + response.getStatusText());
-                                serverResponseText.setText(response.getText());
+                                MatchingTaskMapper mapper = GWT.create(MatchingTaskMapper.class);
+                                String json = response.getText();
+                                MatchingTask task = mapper.read(json);
+                                serverResponseText.setText(mapper.write(task));
                                 dialogBox.center();
                                 closeButton.setFocus(true);
                             } else {
@@ -167,8 +172,8 @@ public class SMatchWeb implements EntryPoint {
         }
 
         // Add a handler to send the name to the server
-        SendHandler handler = new SendHandler();
-        sendButton.addClickHandler(handler);
+        GetTaskHandler handler = new GetTaskHandler();
+        getTaskButton.addClickHandler(handler);
         taskField.addKeyUpHandler(handler);
 
         // Create a handler for the sendTaskButton
@@ -229,9 +234,9 @@ public class SMatchWeb implements EntryPoint {
                 contextPair.setSourceContext(source);
                 contextPair.setTargetContext(target);
 
-                //BaseContextPairMapper mapper = GWT.create(BaseContextPairMapper.class);
-                String json = "{\"sourceContext\":{\"root\":{\"children\":[{\"children\":[{\"children\":[],\"id\":\"n2_25210409\",\"name\":\"Earth and Atmospheric Sciences\"},{\"children\":[],\"id\":\"n3_25210409\",\"name\":\"Economics\"},{\"children\":[],\"id\":\"n4_25210409\",\"name\":\"English\"},{\"children\":[],\"id\":\"n5_25210409\",\"name\":\"Classics\"},{\"children\":[],\"id\":\"n6_25210409\",\"name\":\"Asian Languages\"},{\"children\":[],\"id\":\"n7_25210409\",\"name\":\"History\"},{\"children\":[],\"id\":\"n8_25210409\",\"name\":\"Mathematics\"},{\"children\":[],\"id\":\"n9_25210409\",\"name\":\"Astronomy\"},{\"children\":[],\"id\":\"n10_25210409\",\"name\":\"Computer Science\"},{\"children\":[],\"id\":\"n11_25210409\",\"name\":\"Linguistics\"}],\"id\":\"n1_25210409\",\"name\":\"College of Arts and Sciences\"},{\"children\":[{\"children\":[],\"id\":\"n13_25210409\",\"name\":\"Chemical Engineering\"},{\"children\":[],\"id\":\"n14_25210409\",\"name\":\"Civil and Environmental Engineering\"},{\"children\":[],\"id\":\"n15_25210409\",\"name\":\"Electrical Computer Engineering\"},{\"children\":[],\"id\":\"n16_25210409\",\"name\":\"Materials Science and Engineering\"},{\"children\":[],\"id\":\"n17_25210409\",\"name\":\"Earth and Atmospheric Sciences\"}],\"id\":\"n12_25210409\",\"name\":\"College of Engineering\"}],\"id\":\"n0_25210409\",\"name\":\"Courses\"}},\"targetContext\":{\"root\":{\"children\":[{\"children\":[{\"children\":[],\"id\":\"n20_25210409\",\"name\":\"English\"},{\"children\":[],\"id\":\"n21_25210409\",\"name\":\"Earth Sciences\"},{\"children\":[],\"id\":\"n22_25210409\",\"name\":\"Computer Science\"},{\"children\":[],\"id\":\"n23_25210409\",\"name\":\"Economics\"},{\"children\":[],\"id\":\"n24_25210409\",\"name\":\"Astronomy\"},{\"children\":[],\"id\":\"n25_25210409\",\"name\":\"Asian Languages\"},{\"children\":[],\"id\":\"n26_25210409\",\"name\":\"Classics\"},{\"children\":[],\"id\":\"n27_25210409\",\"name\":\"History\"},{\"children\":[],\"id\":\"n28_25210409\",\"name\":\"Linguistics\"},{\"children\":[],\"id\":\"n29_25210409\",\"name\":\"Mathematics\"},{\"children\":[],\"id\":\"n30_25210409\",\"name\":\"History and Philosophy Science\"}],\"id\":\"n19_25210409\",\"name\":\"College of Arts and Sciences\"},{\"children\":[{\"children\":[],\"id\":\"n32_25210409\",\"name\":\"Civil and Environmental Engineering\"},{\"children\":[],\"id\":\"n33_25210409\",\"name\":\"Electrical Engineering\"},{\"children\":[],\"id\":\"n34_25210409\",\"name\":\"Chemical Engineering\"},{\"children\":[],\"id\":\"n35_25210409\",\"name\":\"Materials Science and Engineering\"}],\"id\":\"n31_25210409\",\"name\":\"College Engineering\"}],\"id\":\"n18_25210409\",\"name\":\"Course\"}}}";
-                //mapper.write(contextPair);
+                BaseContextPairMapper mapper = GWT.create(BaseContextPairMapper.class);
+                //String json = "{\"sourceContext\":{\"root\":{\"children\":[{\"children\":[{\"children\":[],\"id\":\"n2_25210409\",\"name\":\"Earth and Atmospheric Sciences\"},{\"children\":[],\"id\":\"n3_25210409\",\"name\":\"Economics\"},{\"children\":[],\"id\":\"n4_25210409\",\"name\":\"English\"},{\"children\":[],\"id\":\"n5_25210409\",\"name\":\"Classics\"},{\"children\":[],\"id\":\"n6_25210409\",\"name\":\"Asian Languages\"},{\"children\":[],\"id\":\"n7_25210409\",\"name\":\"History\"},{\"children\":[],\"id\":\"n8_25210409\",\"name\":\"Mathematics\"},{\"children\":[],\"id\":\"n9_25210409\",\"name\":\"Astronomy\"},{\"children\":[],\"id\":\"n10_25210409\",\"name\":\"Computer Science\"},{\"children\":[],\"id\":\"n11_25210409\",\"name\":\"Linguistics\"}],\"id\":\"n1_25210409\",\"name\":\"College of Arts and Sciences\"},{\"children\":[{\"children\":[],\"id\":\"n13_25210409\",\"name\":\"Chemical Engineering\"},{\"children\":[],\"id\":\"n14_25210409\",\"name\":\"Civil and Environmental Engineering\"},{\"children\":[],\"id\":\"n15_25210409\",\"name\":\"Electrical Computer Engineering\"},{\"children\":[],\"id\":\"n16_25210409\",\"name\":\"Materials Science and Engineering\"},{\"children\":[],\"id\":\"n17_25210409\",\"name\":\"Earth and Atmospheric Sciences\"}],\"id\":\"n12_25210409\",\"name\":\"College of Engineering\"}],\"id\":\"n0_25210409\",\"name\":\"Courses\"}},\"targetContext\":{\"root\":{\"children\":[{\"children\":[{\"children\":[],\"id\":\"n20_25210409\",\"name\":\"English\"},{\"children\":[],\"id\":\"n21_25210409\",\"name\":\"Earth Sciences\"},{\"children\":[],\"id\":\"n22_25210409\",\"name\":\"Computer Science\"},{\"children\":[],\"id\":\"n23_25210409\",\"name\":\"Economics\"},{\"children\":[],\"id\":\"n24_25210409\",\"name\":\"Astronomy\"},{\"children\":[],\"id\":\"n25_25210409\",\"name\":\"Asian Languages\"},{\"children\":[],\"id\":\"n26_25210409\",\"name\":\"Classics\"},{\"children\":[],\"id\":\"n27_25210409\",\"name\":\"History\"},{\"children\":[],\"id\":\"n28_25210409\",\"name\":\"Linguistics\"},{\"children\":[],\"id\":\"n29_25210409\",\"name\":\"Mathematics\"},{\"children\":[],\"id\":\"n30_25210409\",\"name\":\"History and Philosophy Science\"}],\"id\":\"n19_25210409\",\"name\":\"College of Arts and Sciences\"},{\"children\":[{\"children\":[],\"id\":\"n32_25210409\",\"name\":\"Civil and Environmental Engineering\"},{\"children\":[],\"id\":\"n33_25210409\",\"name\":\"Electrical Engineering\"},{\"children\":[],\"id\":\"n34_25210409\",\"name\":\"Chemical Engineering\"},{\"children\":[],\"id\":\"n35_25210409\",\"name\":\"Materials Science and Engineering\"}],\"id\":\"n31_25210409\",\"name\":\"College Engineering\"}],\"id\":\"n18_25210409\",\"name\":\"Course\"}}}";
+                String json = mapper.write(contextPair);
                 GWT.log(json);
 
                 errorLabel.setText("");
@@ -266,6 +271,7 @@ public class SMatchWeb implements EntryPoint {
                                 serverResponseLabel.removeStyleName("serverResponseLabelError");
                                 serverResponseLabel.setHTML(response.getStatusCode() + " " + response.getStatusText());
                                 serverResponseText.setText(response.getText());
+                                taskField.setText(response.getText());
                                 dialogBox.center();
                                 closeButton.setFocus(true);
                             } else {

@@ -33,8 +33,7 @@ public class MatchMatrix {
      * @param x row count
      * @param y column count
      */
-    @JsonCreator
-    public MatchMatrix(@JsonProperty final int x, @JsonProperty final int y) {
+    public MatchMatrix(final int x, final int y) {
         this.x = x;
         this.y = y;
         this.matrix = new char[x][y];
@@ -44,7 +43,9 @@ public class MatchMatrix {
     }
 
     @JsonCreator
-    public MatchMatrix(@JsonProperty final int x, @JsonProperty final int y, @JsonProperty char[][] matrix) {
+    public MatchMatrix(@JsonProperty("x") final int x,
+                       @JsonProperty("y") final int y,
+                       @JsonProperty("matrix") char[][] matrix) {
         this.x = x;
         this.y = y;
         this.matrix = matrix;

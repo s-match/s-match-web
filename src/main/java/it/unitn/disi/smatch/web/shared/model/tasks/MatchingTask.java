@@ -47,9 +47,9 @@ public class MatchingTask {
     private Date completeTime;
 
     /**
-     * Task error
+     * Task error message
      */
-    private Throwable error;
+    private String errorMessage;
 
     public String getId() {
         return id;
@@ -107,11 +107,11 @@ public class MatchingTask {
         this.completeTime = completeTime;
     }
 
-    public Throwable getError() {
-        return error;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setError(Throwable error) {
-        this.error = error;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

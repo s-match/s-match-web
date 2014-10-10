@@ -9,9 +9,9 @@ import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
  */
 public class MappingElement {
 
-    protected BaseNode source;
-    protected BaseNode target;
-    protected char relation;
+    protected final BaseNode source;
+    protected final BaseNode target;
+    protected final char relation;
 
     public MappingElement(BaseNode source, BaseNode target, char relation) {
         this.source = source;

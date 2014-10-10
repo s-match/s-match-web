@@ -155,12 +155,12 @@ public class MatchService implements IMatchService, InitializingBean, Disposable
                                 log.info("Completed task [id=" + taskID + "]. Mapping items: " + result.getResult().size());
                             }
                         } catch (InterruptedException e) {
-                            result.setError(e);
+                            result.setErrorMessage(e.getMessage());
                             if (log.isErrorEnabled()) {
                                 log.error("Task interrupted [id=" + taskID + "]: " + e);
                             }
                         } catch (ExecutionException e) {
-                            result.setError(e.getCause());
+                            result.setErrorMessage(e.getCause().getMessage());
                             if (log.isErrorEnabled()) {
                                 log.error("Task failed [id=" + taskID + "]: " + e.getCause());
                             }
@@ -309,7 +309,7 @@ public class MatchService implements IMatchService, InitializingBean, Disposable
                             at.cancel(true);
                         }
                         mt.setCompleteTime(new Date());
-                        mt.setError(new SMatchWebTaskTimedOutException("Task was running longer than " + taskTimeout + " and was cancelled"));
+                        mt.setErrorMessage("Task was running longer than " + taskTimeout + " and was cancelled");
 
                         if (log.isWarnEnabled()) {
                             log.warn("Timed out task [id=" + entry.getKey() + "]");

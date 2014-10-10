@@ -1,6 +1,9 @@
 package it.unitn.disi.smatch.web.shared.model.mappings;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.unitn.disi.smatch.web.shared.model.IndexedObject;
+import it.unitn.disi.smatch.web.shared.model.matrices.MatchMatrix;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
 
@@ -13,8 +16,15 @@ import java.util.Iterator;
  */
 public class NodesMatrixMapping extends MatrixMapping {
 
-    public NodesMatrixMapping(BaseContext source, BaseContext target) {
-        super(source, target);
+    public NodesMatrixMapping(BaseContext sourceContext, BaseContext targetContext) {
+        super(sourceContext, targetContext);
+    }
+
+    @JsonCreator
+    public NodesMatrixMapping(@JsonProperty("sourceContext") BaseContext sourceContext,
+                              @JsonProperty("targetContext") BaseContext targetContext,
+                              @JsonProperty("matrix") MatchMatrix matrix) {
+        super(sourceContext, targetContext, matrix);
     }
 
     @Override

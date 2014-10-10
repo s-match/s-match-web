@@ -99,8 +99,7 @@ public class MatrixMapping extends BaseMapping {
         this.matrix = new MatchMatrix();
     }
 
-    @JsonCreator
-    public MatrixMapping(@JsonProperty BaseContext sourceContext, @JsonProperty BaseContext targetContext) {
+    public MatrixMapping(BaseContext sourceContext, BaseContext targetContext) {
         super(sourceContext, targetContext);
 
         // counts and indexes them
@@ -119,7 +118,9 @@ public class MatrixMapping extends BaseMapping {
     }
 
     @JsonCreator
-    public MatrixMapping(@JsonProperty BaseContext sourceContext, @JsonProperty BaseContext targetContext, @JsonProperty MatchMatrix matrix) {
+    public MatrixMapping(@JsonProperty("sourceContext") BaseContext sourceContext,
+                         @JsonProperty("targetContext") BaseContext targetContext,
+                         @JsonProperty("matrix") MatchMatrix matrix) {
         super(sourceContext, targetContext);
 
         // counts and indexes them

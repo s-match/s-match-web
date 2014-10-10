@@ -1,18 +1,13 @@
 package it.unitn.disi.smatch.web.server.api.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.unitn.disi.smatch.web.shared.api.IMatchAPI;
 import it.unitn.disi.smatch.web.server.api.service.IMatchService;
+import it.unitn.disi.smatch.web.shared.api.IMatchAPI;
 import it.unitn.disi.smatch.web.shared.model.exceptions.SMatchWebException;
 import it.unitn.disi.smatch.web.shared.model.tasks.MatchingTask;
-import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
-import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 /**
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
