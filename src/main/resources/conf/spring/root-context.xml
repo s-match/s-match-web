@@ -12,7 +12,7 @@
 
 
     <!-- enable properties resolution -->
-    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties" />
+    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties"/>
     <context:property-placeholder properties-ref="smatchwebProperties"/>
 
     <!-- make our application annotation based -->
@@ -30,7 +30,8 @@
         </constructor-arg>
     </bean>
 
-    <bean id="anonymousAuthFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+    <bean id="anonymousAuthFilter"
+          class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
         <constructor-arg index="0" value="anon-key"/>
     </bean>
 </beans>

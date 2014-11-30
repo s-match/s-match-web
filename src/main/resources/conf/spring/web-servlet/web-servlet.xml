@@ -11,7 +11,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- enable properties resolution -->
-    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties" />
+    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties"/>
     <context:property-placeholder properties-ref="smatchwebProperties"/>
 
     <context:annotation-config/>
@@ -27,9 +27,12 @@
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
         <property name="exposedContextBeanNames">
-            <list><value>smatchwebProperties</value></list>
+            <list>
+                <value>smatchwebProperties</value>
+            </list>
         </property>
     </bean>
 
-    <bean id="httpResponseStatusExceptionResolver" class="it.unitn.disi.smatch.web.server.web.handlers.HTTPResponseStatusExceptionResolver"/>
+    <bean id="httpResponseStatusExceptionResolver"
+          class="it.unitn.disi.smatch.web.server.web.handlers.HTTPResponseStatusExceptionResolver"/>
 </beans>

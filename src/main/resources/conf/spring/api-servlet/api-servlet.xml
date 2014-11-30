@@ -13,7 +13,7 @@
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- enable properties resolution -->
-    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties" />
+    <util:properties id="smatchwebProperties" location="classpath:/smatchweb.properties"/>
     <context:property-placeholder properties-ref="smatchwebProperties"/>
 
     <!-- make our application annotation based -->
@@ -22,7 +22,8 @@
     <mvc:annotation-driven/>
 
     <!-- api -->
-    <bean id="apiFilterChainProxy" class="it.unitn.disi.smatch.web.server.api.handlers.ExceptionHandlingFilterChainProxy">
+    <bean id="apiFilterChainProxy"
+          class="it.unitn.disi.smatch.web.server.api.handlers.ExceptionHandlingFilterChainProxy">
         <property name="exceptionResolver" ref="restExceptionResolver"/>
         <constructor-arg>
             <list>
@@ -40,7 +41,8 @@
     </bean>
 
     <!-- Allow Exceptions to be handled in annotated methods if desired.  Otherwise fallback to the 'restExceptionResolver' below: -->
-    <bean id="annotationMethodHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+    <bean id="annotationMethodHandlerExceptionResolver"
+          class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
         <property name="order" value="0"/>
     </bean>
     <bean id="restExceptionResolver"
