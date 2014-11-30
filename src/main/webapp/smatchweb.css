@@ -9,6 +9,16 @@ h1 {
     text-align: center;
 }
 
+body {
+    width: 98%;
+
+    margin: 2px;
+    padding: 8px;
+    font-family: Georgia, serif;
+    background-repeat: no-repeat;
+    background-image: url("imgs/gBG.png");
+}
+
 .sendButton {
     display: block;
     font-size: 16pt;
@@ -16,11 +26,12 @@ h1 {
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
-    width: 400px;
+    width: auto;
 }
 
 .dialogVPanel {
     margin: 5px;
+
 }
 
 .serverResponseLabelError {
@@ -30,4 +41,171 @@ h1 {
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
     margin: 15px 6px 6px;
+}
+
+.action {
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: justify;
+}
+
+.action-create {
+    background-image: url("imgs/tools.png");
+}
+
+.action-save {
+    background-color: Maroon;
+    background-image: url("imgs/tools.svg");
+}
+
+.label {
+    width: 100px;
+    height: 40px;
+    margin: 2px;
+    font-size: medium;
+    text-align: center;
+}
+
+.gwt-Button {
+    background: #e3e8f3;
+    border: 0px hidden;
+    background-color: e3e8f3;
+}
+
+.treeBox {
+    padding: 2px;
+    margin: 2px;
+    width: 99%;
+    height: 99%;
+    overflow: auto;
+
+}
+
+.wrapper {
+    margin: 2px;
+    padding: 2px;
+
+}
+
+.gwt-ListBox {
+    margin-right: 3px;
+    margin-left: 3px;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.header {
+
+    background: #e3e8f3 url("imgs/gmap.jpg") repeat-x 0px 0px;
+}
+
+.sub_header {
+
+    background: #e3e8f3 url("imgs/gmap.jpg") repeat-x 0px 0px;
+}
+
+.tree-r {
+    min-width: 300px;
+    overflow: auto;
+    float: right;
+}
+
+.tree {
+    min-width: 300px;
+}
+
+.tree-l {
+    min-width: 300px;
+    overflow: auto;
+    float: left;
+}
+
+.table {
+    width: 100%;
+    height: 99%;
+    overflow: auto;
+    padding: 2px;
+    text-align: center;
+}
+
+.button_text {
+    clear: both;
+    font: 0.7em;
+    text-align: center;
+}
+
+.gwt-Label {
+
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+}
+
+.button_simple {
+    background: #e3e8f3;
+    border: 1px #fff inset;
+    box-shadow: 0px 0px 5px #eee;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px; /* future proofing */
+    -khtml-border-radius: 10px; /* for old Konqueror browsers */
+
+}
+
+.caption {
+    color: rgb(0, 0, 0);
+    background-color: rgb(194, 207, 243);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.button {
+    background: -moz-linear-gradient(center top, #ffffff 0%, #ffffff 50%, #d6d6d6) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 2px solid #bfbcb5;
+    border-radius: 10px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 1) inset;
+    color: #000;
+    font-weight: bold;
+    /* font-family: Arial,Helvetica,sans-serif; */
+    font-size: 10px;
+    /* padding: 10px 20px; */
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.button:hover {
+    color: #222;
+    border-color: #09f;
+}
+
+.button:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    color: #857e72;
+    font-weight: normal;
+}
+
+.error {
+    color: red;
+}
+
+.equivalence {
+    background: url("imgs/relations/equal.gif") no-repeat;
+    min-width: 100px;
+}
+
+.less-general {
+    background: url("imgs/relations/less.gif") no-repeat;
+    min-width: 100px;
+}
+
+.more-general {
+    background: url("imgs/relations/more.gif") no-repeat;
+    min-width: 100px;
+}
+
+.hsplitter {
+    cursor: col-resize;
 }

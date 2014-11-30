@@ -14,6 +14,7 @@ public @interface HTTPResponseStatus {
 
     /**
      * HTTP Status code
+     *
      * @return HTTP Status code
      */
     int value() default 500;

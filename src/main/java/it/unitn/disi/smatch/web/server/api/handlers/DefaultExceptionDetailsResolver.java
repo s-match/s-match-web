@@ -169,7 +169,7 @@ public class DefaultExceptionDetailsResolver implements ExceptionDetailsResolver
      * status message should be returned.
      *
      * @return the response status message to return to the client, or {@code null} if no
-     *         status message should be returned.
+     * status message should be returned.
      */
     private String getMessage(String msg, ServletWebRequest webRequest, Exception ex) {
         if ("null".equalsIgnoreCase(msg) || "off".equalsIgnoreCase(msg)) {

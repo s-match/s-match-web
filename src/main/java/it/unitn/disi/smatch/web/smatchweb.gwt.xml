@@ -15,6 +15,8 @@
     <!-- JSON serializer -->
     <inherits name="com.github.nmorel.gwtjackson.GwtJackson"/>
 
+    <inherits name="com.google.gwt.json.JSON"/>
+
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
     <!-- any one of the following lines.                            -->
@@ -37,5 +39,5 @@
 
     <!-- DEV ONLY: one permutation for Chrome to speed up compilation -->
     <!--<set-property name="user.agent" value="safari"/>-->
-    <set-property name="user.agent" value="gecko1_8"/>
+    <set-property name="user.agent" value="gecko1_8,safari"/>
 </module>

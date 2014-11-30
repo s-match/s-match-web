@@ -82,12 +82,10 @@ import java.util.List;
  * </table>
  * <p/>
  *
- *
- * @see DefaultExceptionDetailsResolver
- * @see HttpMessageConverter
- *
  * @author Les Hazlewood
  * @author <a rel="author" href="http://autayeu.com/">Aliaksandr Autayeu</a>
+ * @see DefaultExceptionDetailsResolver
+ * @see HttpMessageConverter
  */
 public class ExceptionDetailsExceptionResolver extends AbstractHandlerExceptionResolver implements InitializingBean {
 
