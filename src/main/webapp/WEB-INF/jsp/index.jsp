@@ -2,15 +2,18 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!doctype html>
-<!-- The DOCTYPE declaration above will set the     -->
-<!-- browser's rendering engine into                -->
-<!-- "Standards Mode". Replacing this declaration   -->
+<!-- The DOCTYPE declaration above will set the -->
+<!-- browser's rendering engine into -->
+<!-- "Standards Mode". Replacing this declaration -->
 <!-- with a "Quirks Mode" doctype is not supported. -->
 
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
+    <link rel="shortcut icon" type="image/x-icon" href="imgs/favicon.ico">
+
+    <link type="text/css" rel="stylesheet" href="gwt.css">
     <!--                                                               -->
     <!-- Consider inlining CSS to reduce the number of requested files -->
     <!--                                                               -->
@@ -48,23 +51,6 @@
     </div>
 </noscript>
 
-<h1>Web Application Starter Project</h1>
-
-<table align="center">
-    <tr>
-        <td colspan="2" style="font-weight:bold;">Please enter your task id:</td>
-    </tr>
-    <tr>
-        <td id="taskFieldContainer"></td>
-        <td id="sendButtonContainer"></td>
-    </tr>
-    <tr>
-        <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-    </tr>
-    <tr>
-        <td id="sendTaskButtonContainer"></td>
-    </tr>
-</table>
 <%@ include file="include/analytics.jsp" %>
 </body>
 </html>
