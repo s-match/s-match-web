@@ -38,7 +38,6 @@ public class CustomTreeModel implements TreeViewModel {
 
                 TNode selNode = selectionModel.getSelectedObject();
                 if (selNode != null && selNode.getParent() == null) {
-                    System.out.println("ROOT SELECTED");
                     addNode.setEnabled(false);
                     delNode.setEnabled(false);
                     addChildNode.setEnabled(true);

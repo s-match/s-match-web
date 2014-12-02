@@ -22,17 +22,13 @@ public class JsonTree {
                     JSONString nodeLabel = objItem.get("name").isString();
                     JSONArray nodeChildren = objItem.get("children").isArray(); //$NON-NLS-1$
                     if (nodeLabel == null) {
-                        System.out.println("No Node found");
                         return;
                     }
                     if (nodeChildren == null) {
-                        System.out.println("No children found");
                         return;
                     }
-                    System.out.println(parent.getid() + " :: " + nodeLabel.stringValue());
                     TNode savedNode = model.addNode(parent.getid(), nodeLabel.stringValue());
                     if (savedNode == null) {
-                        System.out.println("There was a problem adding the nodes");
                         return;
                     }
 
@@ -48,20 +44,19 @@ public class JsonTree {
         try {
 
             JSONObject objTree = JSONParser.parseStrict(treedata).isObject();
-//System.out.println(objTree);
             if (objTree != null) {
                 JSONString nodeLabel = objTree.get("name").isString();
                 JSONArray nodeChildren = objTree.get("children").isArray(); //$NON-NLS-1$
                 if (nodeLabel == null) {
-                    System.out.println("No Root found");
+                    //no root found
                     return;
                 }
                 TNode savedNode = model.addNode(null, nodeLabel.stringValue());
                 if (savedNode == null) {
-                    System.out.println("There was a problem adding the nodes");
+                    //There was a problem adding the nodes
                     return;
                 }
-                System.out.println("node saved:" + savedNode.getNodeLabel());
+                //node saved
                 addNodesToTree(nodeChildren, savedNode, model);
             }
 
@@ -74,8 +69,6 @@ public class JsonTree {
 
     public void populateChildList(JSONArray list, TNode parent) {
 
-
-        //System.out.println("children:"+parent.getChildrenSize());
         for (int i = 0; i < parent.getChildrenSize(); i++) {
             JSONObject obj = new JSONObject();
 
@@ -97,7 +90,6 @@ public class JsonTree {
 
         for (int i = 0; i < model.rootDataProvider.getList().size(); i++) {
             TNode currNode = model.getNodeAt(i, null);
-            //System.out.println(currNode.getNodeLabel());
             obj.put("name", new JSONString(currNode.getNodeLabel()));
             JSONArray list = new JSONArray();
             populateChildList(list, currNode);
@@ -164,12 +156,10 @@ public class JsonTree {
                 }
 
             }
-            System.out.println("before removal:" + formattedChild);
 
             if (formattedChild.endsWith(",\n")) {
                 formattedChild = formattedChild.substring(0, formattedChild.lastIndexOf(","));
             }
-            System.out.println("after removal:" + formattedChild);
             for (int j = 0; j < tabIndex; j++) {
                 formattedChild += "\t";
             }
@@ -188,7 +178,7 @@ public class JsonTree {
             JSONString nodeLabel = jsonObj.get("name").isString();
             JSONArray nodeChildren = jsonObj.get("children").isArray(); //$NON-NLS-1$
             if (nodeLabel == null) {
-                System.out.println("No Root found");
+                //go to next
             } else {
                 formattedStr += "\"name\":" + jsonObj.get("name").toString() + ",\n";
                 if (nodeChildren != null && nodeChildren.size() > 0) {
@@ -198,7 +188,6 @@ public class JsonTree {
                 }
             }
         }
-        //System.out.println(formattedStr);
         if (formattedStr.endsWith(",\n")) {
             formattedStr = formattedStr.substring(0, formattedStr.lastIndexOf(","));
         }

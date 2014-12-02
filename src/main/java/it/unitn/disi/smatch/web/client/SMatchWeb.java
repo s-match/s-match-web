@@ -14,6 +14,8 @@ import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.TreeViewModel;
 import it.unitn.disi.smatch.web.client.model.*;
+import it.unitn.disi.smatch.web.client.widget.MappingReporter;
+import it.unitn.disi.smatch.web.client.widget.MsgPopUp;
 import it.unitn.disi.smatch.web.shared.model.mappings.MappingElement;
 import it.unitn.disi.smatch.web.shared.model.mappings.NodesMatrixMapping;
 import it.unitn.disi.smatch.web.shared.model.tasks.MatchingTask;
@@ -21,12 +23,15 @@ import it.unitn.disi.smatch.web.shared.model.trees.BaseContext;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseContextPair;
 import it.unitn.disi.smatch.web.shared.model.trees.BaseNode;
 import com.google.gwt.core.client.EntryPoint;
+import com.github.nmorel.gwtjackson.client.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
 public class SMatchWeb extends Composite implements ServerTaskOpener,EntryPoint {
 
+    public static interface BaseContextPairMapper extends ObjectMapper<BaseContextPair> {}
+    public static interface MatchingTaskMapper extends ObjectMapper<MatchingTask> {}
 
     /**
      * The CellTree.
@@ -71,7 +76,7 @@ public class SMatchWeb extends Composite implements ServerTaskOpener,EntryPoint 
     boolean notSourceEmpty = false;
     boolean notTargetEmpty = false;
 
-    public SMatchWeb() {
+    public void onModuleLoad() {
 
 	/*
          * Create the source and target trees
@@ -759,7 +764,7 @@ public class SMatchWeb extends Composite implements ServerTaskOpener,EntryPoint 
      */
     private void matchModels() {
 
-        serverComUI = new MappingReporter_UI();
+        serverComUI = new MappingReporter();
         serverComUI.show(this);
 
 
